@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package io.github.breninsul.servlet.logging
 
 import io.github.breninsul.logging.HttpMaskSettings
@@ -32,33 +31,29 @@ import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.boot.autoconfigure.web.servlet.ConditionalOnMissingFilterBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory
 import org.springframework.context.annotation.Bean
 
-
 @ConditionalOnProperty(value = ["servlet.logging-interceptor.enabled"], havingValue = "true", matchIfMissing = true)
 @AutoConfiguration
 @EnableConfigurationProperties(ServletLoggerProperties::class)
 open class ServletLoggerConfiguration {
-
     @Bean(name = ["ServletLoggingFilter"], value = ["ServletLoggingFilter"])
     @ConditionalOnClass(ServletWebServerFactory::class)
-    @ConditionalOnMissingFilterBean(ServletLoggingFilter::class)
-    @ConditionalOnMissingBean(ServletLoggingFilter::class)
-    fun loggingFilter(
-        properties: ServletLoggerProperties,
-    ): FilterRegistrationBean<ServletLoggingFilter> {
-        val requestMaskers= listOf(
-            servletRequestRegexJsonBodyMasking(properties.request.mask),
-            servletRequestFormUrlencodedBodyMasking(properties.request.mask)
-        )
-        val responseMaskers= listOf(
-            servletResponseRegexJsonBodyMasking(properties.request.mask),
-            servletResponseFormUrlencodedBodyMasking(properties.request.mask)
-        )
+    @ConditionalOnMissingBean(name = ["ServletLoggingFilter"])
+    fun loggingFilter(properties: ServletLoggerProperties): FilterRegistrationBean<ServletLoggingFilter> {
+        val requestMaskers =
+            listOf(
+                servletRequestRegexJsonBodyMasking(properties.request.mask),
+                servletRequestFormUrlencodedBodyMasking(properties.request.mask),
+            )
+        val responseMaskers =
+            listOf(
+                servletResponseRegexJsonBodyMasking(properties.request.mask),
+                servletResponseFormUrlencodedBodyMasking(properties.request.mask),
+            )
         val registrationBean = FilterRegistrationBean<ServletLoggingFilter>()
         val servletLoggingFilter = ServletLoggingFilter(properties, requestMaskers, responseMaskers)
         registrationBean.filter = servletLoggingFilter
@@ -66,22 +61,11 @@ open class ServletLoggerConfiguration {
         return registrationBean
     }
 
+    fun servletRequestRegexJsonBodyMasking(properties: HttpMaskSettings): ServletRequestBodyMasking = ServletRequestBodyMaskingDelegate(HttpRegexJsonBodyMasking(properties.maskJsonBodyKeys))
 
-    fun servletRequestRegexJsonBodyMasking(properties: HttpMaskSettings): ServletRequestBodyMasking {
-        return ServletRequestBodyMaskingDelegate(HttpRegexJsonBodyMasking(properties.maskJsonBodyKeys))
-    }
+    fun servletResponseRegexJsonBodyMasking(properties: HttpMaskSettings): ServletResponseBodyMasking = ServletResponseBodyMaskingDelegate(HttpRegexJsonBodyMasking(properties.maskJsonBodyKeys))
 
+    fun servletRequestFormUrlencodedBodyMasking(properties: HttpMaskSettings): ServletRequestBodyMasking = ServletRequestBodyMaskingDelegate(HttpRegexFormUrlencodedBodyMasking(properties.maskJsonBodyKeys))
 
-    fun  servletResponseRegexJsonBodyMasking(properties: HttpMaskSettings): ServletResponseBodyMasking {
-        return ServletResponseBodyMaskingDelegate(HttpRegexJsonBodyMasking(properties.maskJsonBodyKeys))
-    }
-
-
-    fun servletRequestFormUrlencodedBodyMasking(properties: HttpMaskSettings): ServletRequestBodyMasking {
-        return ServletRequestBodyMaskingDelegate(HttpRegexFormUrlencodedBodyMasking(properties.maskJsonBodyKeys))
-    }
-
-    fun  servletResponseFormUrlencodedBodyMasking(properties: HttpMaskSettings): ServletResponseBodyMasking {
-        return ServletResponseBodyMaskingDelegate(HttpRegexFormUrlencodedBodyMasking(properties.maskJsonBodyKeys))
-    }
+    fun servletResponseFormUrlencodedBodyMasking(properties: HttpMaskSettings): ServletResponseBodyMasking = ServletResponseBodyMaskingDelegate(HttpRegexFormUrlencodedBodyMasking(properties.maskJsonBodyKeys))
 }
