@@ -45,7 +45,7 @@ open class ServletLoggerProperties(
     var loggingLevel: JavaLoggingLevel = JavaLoggingLevel.INFO,
     var request: ServletHttpRequestLogSettings = ServletHttpRequestLogSettings(tookTimeIncluded = false),
     var response: HttpLogSettings = HttpLogSettings(),
-    var order: Int = 0,
+    var order: Int = Int.MIN_VALUE,
     var newLineColumnSymbols: Int = 14,
 ) {
     open fun toHttpLoggingProperties() = HttpLoggingProperties(enabled, loggingLevel, request, response, order, newLineColumnSymbols)
