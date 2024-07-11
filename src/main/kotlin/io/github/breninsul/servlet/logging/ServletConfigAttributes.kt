@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2024 BreninSul
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package io.github.breninsul.servlet.logging
 
 import io.github.breninsul.logging.HttpConfigHeaders
@@ -11,14 +35,14 @@ import jakarta.servlet.http.HttpServletResponse
  *
  * @return the formatted query string or an empty string
  */
-fun HttpServletRequest.getFormattedQueryString()= if (this.queryString == null) "" else "?${this.queryString}"
+fun HttpServletRequest.getFormattedQueryString() = if (this.queryString == null) "" else "?${this.queryString}"
 
 /**
  * Returns a formatted URI string by combining the request URI and query string (if it exists).
  *
  * @return The formatted URI string.
  */
-fun HttpServletRequest.getFormattedUriString()= "${this.requestURI}${this.getFormattedQueryString()}"
+fun HttpServletRequest.getFormattedUriString() = "${this.requestURI}${this.getFormattedQueryString()}"
 
 /**
  * Converts the HttpHeaders to a MultiMap where keys are strings and values are lists of strings.
@@ -45,7 +69,6 @@ fun HttpServletResponse.getHeadersMultiMap(): Map<String, List<String>> =
         .map { it to this.getHeaders(it).toList() }
         .toMap()
 
-
 /**
  * Returns a list of technical headers present in the HTTP request.
  *
@@ -59,7 +82,7 @@ fun HttpServletRequest.getTechnicalHeaders(): List<Pair<String, String>> = TECHN
  * @param enable Boolean value indicating whether to enable or disable logging of request URI.
  */
 fun HttpServletRequest.logRequestUri(enable: Boolean?) {
-    setAttribute(HttpConfigHeaders.LOG_REQUEST_URI,enable)
+    setAttribute(HttpConfigHeaders.LOG_REQUEST_URI, enable)
 }
 
 /**
@@ -76,8 +99,9 @@ fun HttpServletRequest.logRequestUri(): Boolean? = getAttribute(HttpConfigHeader
  * @param enable If set to true, the request headers will be logged. If set to false, the request headers will not be logged.
  */
 fun HttpServletRequest.logRequestHeaders(enable: Boolean?) {
-    setAttribute(HttpConfigHeaders.LOG_REQUEST_HEADERS,enable)
+    setAttribute(HttpConfigHeaders.LOG_REQUEST_HEADERS, enable)
 }
+
 /**
  * Retrieves the value of the "LOG_REQUEST_HEADERS" header from the HttpRequest headers.
  *
@@ -91,8 +115,9 @@ fun HttpServletRequest.logRequestHeaders(): Boolean? = getAttribute(HttpConfigHe
  * @param enable Whether to enable logging of request body.
  */
 fun HttpServletRequest.logRequestBody(enable: Boolean?) {
-    setAttribute(HttpConfigHeaders.LOG_REQUEST_BODY,enable)
+    setAttribute(HttpConfigHeaders.LOG_REQUEST_BODY, enable)
 }
+
 /**
  * Retrieves the value of the "Log-Request-Body" header from the HttpRequest instance.
  *
@@ -106,8 +131,9 @@ fun HttpServletRequest.logRequestBody(): Boolean? = getAttribute(HttpConfigHeade
  * @param enable Indicates whether to enable or disable the logging of request took time.
  */
 fun HttpServletRequest.logRequestTookTime(enable: Boolean?) {
-    setAttribute(HttpConfigHeaders.LOG_REQUEST_TOOK_TIME,enable)
+    setAttribute(HttpConfigHeaders.LOG_REQUEST_TOOK_TIME, enable)
 }
+
 /**
  * Retrieves the value of the LOG_REQUEST_TOOK_TIME header and converts it to a Boolean.
  *
@@ -121,8 +147,9 @@ fun HttpServletRequest.logRequestTookTime(): Boolean? = getAttribute(HttpConfigH
  * @param enable If set to true, request execution time will be logged. If set to false, request execution time logging will be disabled.
  */
 fun HttpServletRequest.logResponseUri(enable: Boolean?) {
-    setAttribute(HttpConfigHeaders.LOG_RESPONSE_URI,enable)
+    setAttribute(HttpConfigHeaders.LOG_RESPONSE_URI, enable)
 }
+
 /**
  * Retrieves the value of the 'LOG_RESPONSE_URI' header from the HttpRequest headers and converts it to a Boolean.
  *
@@ -136,8 +163,9 @@ fun HttpServletRequest.logResponseUri(): Boolean? = getAttribute(HttpConfigHeade
  * @param enable Whether to enable or disable logging of response headers. If set to true, response headers will be logged. If set to false, response headers will not be logged.
  */
 fun HttpServletRequest.logResponseHeaders(enable: Boolean?) {
-    setAttribute(HttpConfigHeaders.LOG_RESPONSE_HEADERS,enable)
+    setAttribute(HttpConfigHeaders.LOG_RESPONSE_HEADERS, enable)
 }
+
 /**
  * Retrieves the value of the "LOG_RESPONSE_HEADERS" header and converts it to a Boolean.
  *
@@ -151,8 +179,9 @@ fun HttpServletRequest.logResponseHeaders(): Boolean? = getAttribute(HttpConfigH
  * @param enable a Boolean value indicating whether to enable or disable logging of the response body
  */
 fun HttpServletRequest.logResponseBody(enable: Boolean?) {
-    setAttribute(HttpConfigHeaders.LOG_RESPONSE_BODY,enable)
+    setAttribute(HttpConfigHeaders.LOG_RESPONSE_BODY, enable)
 }
+
 /**
  * Retrieves the value of the "log_response_body" header and converts it to a Boolean value.
  *
@@ -167,8 +196,9 @@ fun HttpServletRequest.logResponseBody(): Boolean? = getAttribute(HttpConfigHead
  * @param enable A Boolean value indicating whether to enable or disable logging. Pass `true` to enable and `false` to disable.
  */
 fun HttpServletRequest.logResponseTookTime(enable: Boolean?) {
-    setAttribute(HttpConfigHeaders.LOG_RESPONSE_TOOK_TIME,enable)
+    setAttribute(HttpConfigHeaders.LOG_RESPONSE_TOOK_TIME, enable)
 }
+
 /**
  * Retrieves the value of the "Log Response Took Time" header and converts it to a Boolean.
  *

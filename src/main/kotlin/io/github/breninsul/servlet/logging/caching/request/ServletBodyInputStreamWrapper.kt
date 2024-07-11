@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2024 BreninSul
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package io.github.breninsul.servlet.logging.caching.request
 
 import jakarta.servlet.ReadListener
@@ -13,7 +37,9 @@ import java.util.concurrent.Semaphore
  * @property delegate The underlying ByteArrayInputStream to read from.
  * @property internalSemaphore semaphore to sync calls between threads
  */
-open class ServletBodyInputStreamWrapper(val delegate: InputStream) : ServletInputStream() {
+open class ServletBodyInputStreamWrapper(
+    val delegate: InputStream,
+) : ServletInputStream() {
     protected val internalSemaphore = Semaphore(1)
 
     /**
@@ -21,18 +47,14 @@ open class ServletBodyInputStreamWrapper(val delegate: InputStream) : ServletInp
      *
      * @return true if
      */
-    override fun isFinished(): Boolean {
-        return false
-    }
+    override fun isFinished(): Boolean = false
 
     /**
      * Determines whether the reading of the request body is ready.
      *
      * @return true if the reading of the
      */
-    override fun isReady(): Boolean {
-        return true
-    }
+    override fun isReady(): Boolean = true
 
     /**
      * Sets the ReadListener for this BodyInputStream.
@@ -43,9 +65,7 @@ open class ServletBodyInputStreamWrapper(val delegate: InputStream) : ServletInp
      *
      * @param readListener the ReadListener to set
      */
-    override fun setReadListener(readListener: ReadListener) {
-        throw UnsupportedOperationException()
-    }
+    override fun setReadListener(readListener: ReadListener): Unit = throw UnsupportedOperationException()
 
     /**
      * Reads a single byte of data from the input stream.
@@ -53,9 +73,7 @@ open class ServletBodyInputStreamWrapper(val delegate: InputStream) : ServletInp
      * @return the byte read as an integer value
      * @throws IOException if an I/O error occurs
      */
-    override fun read(): Int {
-        return delegate.read()
-    }
+    override fun read(): Int = delegate.read()
 
     /**
      * Reads a sequence of bytes from the input stream into the specified byte
@@ -72,9 +90,7 @@ open class ServletBodyInputStreamWrapper(val delegate: InputStream) : ServletInp
         b: ByteArray,
         off: Int,
         len: Int,
-    ): Int {
-        return delegate.read(b, off, len)
-    }
+    ): Int = delegate.read(b, off, len)
 
     /**
      * Reads a sequence of bytes from the input stream into the specified byte
@@ -85,9 +101,7 @@ open class ServletBodyInputStreamWrapper(val delegate: InputStream) : ServletInp
      *     is no more data because the end of the stream has been reached.
      * @throws IOException if an I/O error occurs.
      */
-    override fun read(b: ByteArray): Int {
-        return delegate.read(b)
-    }
+    override fun read(b: ByteArray): Int = delegate.read(b)
 
     /**
      * Skips over and discards a specified number of bytes from the input
@@ -97,9 +111,7 @@ open class ServletBodyInputStreamWrapper(val delegate: InputStream) : ServletInp
      * @return the actual number of bytes skipped.
      * @throws IOException if an I/O error occurs.
      */
-    override fun skip(n: Long): Long {
-        return delegate.skip(n)
-    }
+    override fun skip(n: Long): Long = delegate.skip(n)
 
     /**
      * Returns the number of bytes that can be read from this input stream
@@ -107,9 +119,7 @@ open class ServletBodyInputStreamWrapper(val delegate: InputStream) : ServletInp
      *
      * @return the number of bytes available for reading
      */
-    override fun available(): Int {
-        return delegate.available()
-    }
+    override fun available(): Int = delegate.available()
 
     /**
      * Closes the input stream.
@@ -146,9 +156,8 @@ open class ServletBodyInputStreamWrapper(val delegate: InputStream) : ServletInp
      *
      * @return true if this input stream supports the mark and reset methods, false otherwise.
      */
-    override fun markSupported(): Boolean {
-        return delegate.markSupported()
-    }
+    override fun markSupported(): Boolean = delegate.markSupported()
+
     protected open fun <T> Semaphore.sync(runnable: Callable<T>): T {
         try {
             this.acquire()
@@ -157,5 +166,4 @@ open class ServletBodyInputStreamWrapper(val delegate: InputStream) : ServletInp
             this.release()
         }
     }
-
 }
