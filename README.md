@@ -35,7 +35,7 @@ add the following dependency:
 ````kotlin
 dependencies {
 //Other dependencies
-    implementation("io.github.breninsul:servlet-logging-starter:1.0.2")
+    implementation("io.github.breninsul:servlet-logging-starter:1.0.2.1")
 //Other dependencies
 }
 

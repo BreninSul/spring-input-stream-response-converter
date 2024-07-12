@@ -40,7 +40,7 @@ val javaVersion = JavaVersion.VERSION_17
 val springBootVersion = "3.3.1"
 
 group = "io.github.breninsul"
-version = "1.0.2"
+version = "1.0.2.1"
 
 java {
     sourceCompatibility = javaVersion
