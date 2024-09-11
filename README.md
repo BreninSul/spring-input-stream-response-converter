@@ -6,25 +6,32 @@ Logging filter implementation and stater to auto register it in Spring context
 
 
 
-| Parameter                                                                | Type             | Description                                                    |
-|--------------------------------------------------------------------------|------------------|----------------------------------------------------------------|
-| `servlet.logging-interceptor.enabled`                                    | Boolean          | Enable autoconfig for this starter                             |
-| `servlet.logging-interceptor.logging-level`                              | JavaLoggingLevel | Logging level of messages                                      |
-| `servlet.logging-interceptor.order`                                      | Int              | Filter order (Ordered interface)                               |
-| `servlet.logging-interceptor.new-line-column-symbols`                    | Int              | How many symbols in first column (param name)                  |
-| `servlet.logging-interceptor.request.id-included`                        | Boolean          | Is request id included to log message (request)                |
-| `servlet.logging-interceptor.request.uri-included`                       | Boolean          | Is uri included to log message (request)                       |
-| `servlet.logging-interceptor.request.took-time-included`                 | Boolean          | Is timing included to log message (request)                    |
-| `servlet.logging-interceptor.request.headers-included`                   | Boolean          | Is headers included to log message (request)                   |
-| `servlet.logging-interceptor.request.body-included`                      | Boolean          | Is body included to log message (request)                      |
-| `servlet.logging-interceptor.request.max-body-size`                      | Int              | Max logging body size   (request)                              |
-| `servlet.logging-interceptor.request.body-size-to-use-temp-file-caching` | Long             | Body size to use temp file caching instead of memory (request) |
-| `servlet.logging-interceptor.response.id-included`                       | Boolean          | Is request id included to log message (response)               |
-| `servlet.logging-interceptor.response.uri-included`                      | Boolean          | Is uri included to log message (response)                      |
-| `servlet.logging-interceptor.response.took-time-included`                | Boolean          | Is timing included to log message (response)                   |
-| `servlet.logging-interceptor.response.headers-included`                  | Boolean          | Is headers included to log message (response)                  |
-| `servlet.logging-interceptor.response.body-included`                     | Boolean          | Is body included to log message (response)                     |
-| `servlet.logging-interceptor.response.max-body-size`                     | Int              | Max logging body size   (response)                             |
+| Parameter                                                                  | Type             | Description                                                             |
+|----------------------------------------------------------------------------|------------------|-------------------------------------------------------------------------|
+| `servlet.logging-interceptor.enabled`                                      | Boolean          | Enable autoconfig for this starter                                      |
+| `servlet.logging-interceptor.logging-level`                                | JavaLoggingLevel | Logging level of messages                                               |
+| `servlet.logging-interceptor.order`                                        | Int              | Filter order (Ordered interface)                                        |
+| `servlet.logging-interceptor.new-line-column-symbols`                      | Int              | How many symbols in first column (param name)                           |
+| `servlet.logging-interceptor.request.id-included`                          | Boolean          | Is request id included to log message (request)                         |
+| `servlet.logging-interceptor.request.uri-included`                         | Boolean          | Is uri included to log message (request)                                |
+| `servlet.logging-interceptor.request.took-time-included`                   | Boolean          | Is timing included to log message (request)                             |
+| `servlet.logging-interceptor.request.headers-included`                     | Boolean          | Is headers included to log message (request)                            |
+| `servlet.logging-interceptor.request.body-included`                        | Boolean          | Is body included to log message (request)                               |
+| `servlet.logging-interceptor.request.max-body-size`                        | Int              | Max logging body size   (request)                                       |
+| `servlet.logging-interceptor.request.body-size-to-use-temp-file-caching`   | Long             | Body size to use temp file caching instead of memory (request)          |
+| `servlet.logging-interceptor.request.mask.mask-headers`                    | String           | Comma separated headers to mask in logs (request)                       |
+| `servlet.logging-interceptor.request.mask.mask-query-parameters`           | String           | Comma separated query parameters to mask in logs (request/response)     |
+| `servlet.logging-interceptor.request.mask.mask-mask-json-body-keys`        | String           | Comma separated body json keys(fields) to mask in logs (request)        |
+| `servlet.logging-interceptor.request.mask.mask-mask-form-urlencoded-body`  | String           | Comma separated form urlencoded keys(fields) to mask in logs (request)  |
+| `servlet.logging-interceptor.response.id-included`                         | Boolean          | Is request id included to log message (response)                        |
+| `servlet.logging-interceptor.response.uri-included`                        | Boolean          | Is uri included to log message (response)                               |
+| `servlet.logging-interceptor.response.took-time-included`                  | Boolean          | Is timing included to log message (response)                            |
+| `servlet.logging-interceptor.response.headers-included`                    | Boolean          | Is headers included to log message (response)                           |
+| `servlet.logging-interceptor.response.body-included`                       | Boolean          | Is body included to log message (response)                              |
+| `servlet.logging-interceptor.response.max-body-size`                       | Int              | Max logging body size   (response)                                      |
+| `servlet.logging-interceptor.response.mask.mask-headers`                   | String           | Comma separated headers to mask in logs (response)                      |
+| `servlet.logging-interceptor.response.mask.mask-mask-json-body-keys`       | String           | Comma separated body json keys(fields) to mask in logs (response)       |
+| `servlet.logging-interceptor.response.mask.mask-mask-form-urlencoded-body` | String           | Comma separated form urlencoded keys(fields) to mask in logs (response) |
 
 
 You can additionally configure logging for each request by passing headers from `io.github.breninsul.rest.logging.RestTemplateConfigHeaders` to request
@@ -35,7 +42,7 @@ add the following dependency:
 ````kotlin
 dependencies {
 //Other dependencies
-    implementation("io.github.breninsul:servlet-logging-starter:1.0.2.1")
+    implementation("io.github.breninsul:servlet-logging-starter:1.1.0")
 //Other dependencies
 }
 

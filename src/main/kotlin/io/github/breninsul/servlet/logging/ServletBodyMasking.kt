@@ -27,6 +27,9 @@ package io.github.breninsul.servlet.logging
 import io.github.breninsul.logging.HttpBodyMasking
 import io.github.breninsul.logging.HttpRequestBodyMasking
 import io.github.breninsul.logging.HttpResponseBodyMasking
+import io.github.breninsul.logging.HttpUriMasking
+
+interface ServletUriMasking : HttpUriMasking
 
 interface ServletRequestBodyMasking : HttpRequestBodyMasking
 
@@ -42,4 +45,10 @@ open class ServletResponseBodyMaskingDelegate(
     protected open val delegate: HttpBodyMasking,
 ) : ServletResponseBodyMasking {
     override fun mask(message: String?): String = delegate.mask(message)
+}
+
+open class ServletUriMaskingDelegate(
+    protected open val delegate: HttpUriMasking,
+) : ServletUriMasking {
+    override fun mask(uri: String?): String = delegate.mask(uri)
 }

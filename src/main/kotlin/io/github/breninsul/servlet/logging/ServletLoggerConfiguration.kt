@@ -27,6 +27,7 @@ package io.github.breninsul.servlet.logging
 import io.github.breninsul.logging.HttpMaskSettings
 import io.github.breninsul.logging.HttpRegexFormUrlencodedBodyMasking
 import io.github.breninsul.logging.HttpRegexJsonBodyMasking
+import io.github.breninsul.logging.HttpRegexUriMasking
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -54,8 +55,9 @@ open class ServletLoggerConfiguration {
                 servletResponseRegexJsonBodyMasking(properties.request.mask),
                 servletResponseFormUrlencodedBodyMasking(properties.request.mask),
             )
+        val uriMaskers = listOf(servletUriMasking(properties.request.mask))
         val registrationBean = FilterRegistrationBean<ServletLoggingFilter>()
-        val servletLoggingFilter = ServletLoggingFilter(properties, requestMaskers, responseMaskers)
+        val servletLoggingFilter = ServletLoggingFilter(properties, uriMaskers, requestMaskers, responseMaskers)
         registrationBean.filter = servletLoggingFilter
         registrationBean.order = servletLoggingFilter.order
         return registrationBean
@@ -68,4 +70,6 @@ open class ServletLoggerConfiguration {
     fun servletRequestFormUrlencodedBodyMasking(properties: HttpMaskSettings): ServletRequestBodyMasking = ServletRequestBodyMaskingDelegate(HttpRegexFormUrlencodedBodyMasking(properties.maskJsonBodyKeys))
 
     fun servletResponseFormUrlencodedBodyMasking(properties: HttpMaskSettings): ServletResponseBodyMasking = ServletResponseBodyMaskingDelegate(HttpRegexFormUrlencodedBodyMasking(properties.maskJsonBodyKeys))
+
+    fun servletUriMasking(properties: HttpMaskSettings): ServletUriMasking = ServletUriMaskingDelegate(HttpRegexUriMasking(properties.maskQueryParameters))
 }

@@ -41,13 +41,24 @@ import java.util.function.Supplier
 import java.util.logging.Level
 import java.util.logging.Logger
 
+/**
+ * ServletLoggingFilter is a filter that logs HTTP requests and responses for a servlet application.
+ *
+ * This filter wraps around incoming requests and outgoing responses to capture and log
+ * relevant data based on the provided configuration.
+ *
+ * @property properties The configuration properties for logging.
+ * @property helper An instance of HttpLoggingHelper to assist with logging operations.
+ * @property servletLogger A Logger instance for logging any errors that occur during processing.
+ */
 open class ServletLoggingFilter(
     protected open val properties: ServletLoggerProperties,
+    uriMaskers: List<ServletUriMasking>,
     requestBodyMaskers: List<ServletRequestBodyMasking>,
     responseBodyMaskers: List<ServletResponseBodyMasking>,
 ) : OncePerRequestFilter(),
     Ordered {
-    protected open val helper = HttpLoggingHelper("Servlet", properties.toHttpLoggingProperties(), requestBodyMaskers, responseBodyMaskers)
+    protected open val helper = HttpLoggingHelper("Servlet", properties.toHttpLoggingProperties(), uriMaskers, requestBodyMaskers, responseBodyMaskers)
     protected open val servletLogger: Logger = Logger.getLogger(ServletLoggingFilter::class.java.name)
 
     override fun doFilterInternal(
