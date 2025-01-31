@@ -26,8 +26,10 @@ package io.github.breninsul.servlet.logging
 
 import io.github.breninsul.logging.HttpLogSettings
 import io.github.breninsul.logging.HttpMaskSettings
+import io.github.breninsul.logging.JavaLoggingLevel
 
 open class ServletHttpRequestLogSettings(
+    loggingLevel: JavaLoggingLevel = JavaLoggingLevel.INFO,
     idIncluded: Boolean = true,
     uriIncluded: Boolean = true,
     tookTimeIncluded: Boolean = true,
@@ -36,4 +38,7 @@ open class ServletHttpRequestLogSettings(
     maxBodySize: Int = Int.MAX_VALUE,
     mask: HttpMaskSettings = HttpMaskSettings(),
     var bodySizeToUseTempFileCaching: Long = 1024 * 1000 * 1, // Default 1 MB
-) : HttpLogSettings(idIncluded, uriIncluded, tookTimeIncluded, headersIncluded, bodyIncluded, maxBodySize, mask)
+) : HttpLogSettings(loggingLevel,idIncluded, uriIncluded, tookTimeIncluded, headersIncluded, bodyIncluded, maxBodySize, mask){
+    @Deprecated(message = "Use constructor with loggingLevel")
+    constructor(idIncluded: Boolean,uriIncluded: Boolean,tookTimeIncluded: Boolean,headersIncluded: Boolean,bodyIncluded: Boolean,maxBodySize: Int,mask: HttpMaskSettings) : this(JavaLoggingLevel.INFO,idIncluded,uriIncluded,tookTimeIncluded,headersIncluded,bodyIncluded,maxBodySize,mask)
+}

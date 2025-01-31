@@ -45,11 +45,11 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 /**
- * Represents the constant key for the request attribute used to store the controller information
- * in a servlet-based logging or routing context. This constant can be used to manage or retrieve
- * metadata about the controller handling the request.
+ * Represents the constant key for the request attribute used to store the
+ * controller information in a servlet-based logging or routing context.
+ * This constant can be used to manage or retrieve metadata about the
+ * controller handling the request.
  */
-const val ATTRIBUTE_REQUEST_HANDLER_LOGGING_ANNOTATION = "ATTRIBUTE_REQUEST_HANDLER_LOGGING_ANNOTATION"
 
 open class ServletLoggingFilter(
     protected open val properties: ServletLoggerProperties,
@@ -61,16 +61,19 @@ open class ServletLoggingFilter(
 ) : OncePerRequestFilter(),
     Ordered {
     /**
-     * Secondary constructor of the `ServletLoggingFilter` class that initializes the filter
-     * with logging properties and lists of masking strategies for URIs, request bodies, and
-     * response bodies. This constructor also initializes the field with an empty list
-     * for any additional filter configurations. Used to support previous version constructor
+     * Secondary constructor of the `ServletLoggingFilter` class that
+     * initializes the filter with logging properties and lists of masking
+     * strategies for URIs, request bodies, and response bodies. This
+     * constructor also initializes the field with an empty list for any
+     * additional filter configurations. Used to support previous version
+     * constructor
      *
      * @param properties Configuration properties for servlet logging.
      * @param uriMaskers List of URI masking strategies.
      * @param requestBodyMaskers List of request body masking strategies.
      * @param responseBodyMaskers List of response body masking strategies.
      */
+    @Deprecated(message = "Use constructor with list of HandlerMapping instead of list of HandlerMappingResolver", replaceWith = ReplaceWith("ServletLoggingFilter(properties, uriMaskers, requestBodyMaskers, responseBodyMaskers, handlerMappings)"))
     constructor(
         properties: ServletLoggerProperties,
         uriMaskers: List<ServletUriMasking>,
@@ -86,14 +89,22 @@ open class ServletLoggingFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        if (!properties.enabled) {
-            filterChain.doFilter(request, response)
-        }
         val time = System.currentTimeMillis()
         try {
-            if (properties.resolveHandlerAnnotation){
-                val annotationSettings=requestHandlerResolver.findAnnotationSettings(request)
-
+            if (properties.resolveHandlerAnnotation) {
+                val annotationOptional = requestHandlerResolver.findAnnotationSettings(request)
+                if (annotationOptional.isPresent) {
+                    val annotation = annotationOptional.get()
+                    //Ignore filter if logging disabled
+                    if (!annotation.enabled) {
+                        return filterChain.doFilter(request, response)
+                    }
+                    request.setAnnotationPropertiesToRequestAttributes( annotation)
+                }
+            }
+            //Ignore filter if logging disabled
+            if (!(request.loggingEnabled()?:properties.enabled)) {
+                return filterChain.doFilter(request, response)
             }
             val id = helper.getIdString()
             val wrappedRequest = wrapRequest(request)
@@ -112,6 +123,27 @@ open class ServletLoggingFilter(
         }
     }
 
+    protected open fun HttpServletRequest.setAnnotationPropertiesToRequestAttributes(
+        annotation: ServletLoggerProperties
+    ) {
+        if (this.loggingEnabled()==null) this.loggingEnabled(annotation.enabled)
+        if (this.loggingLevel() == null) this.loggingLevel(annotation.loggingLevel)
+
+        if (this.requestLoggingLevel() == null) this.requestLoggingLevel(annotation.request.loggingLevel)
+        if (this.logRequestId() == null) this.logRequestId(annotation.request.idIncluded)
+        if (this.logRequestUri() == null) this.logRequestUri(annotation.request.uriIncluded)
+        if (this.logRequestTookTime() == null) this.logRequestTookTime(annotation.request.tookTimeIncluded)
+        if (this.logRequestHeaders() == null) this.logRequestHeaders(annotation.request.headersIncluded)
+        if (this.logRequestBody() == null) this.logRequestBody(annotation.request.bodyIncluded)
+
+        if (this.responseLoggingLevel() == null) this.responseLoggingLevel(annotation.response.loggingLevel)
+        if (this.logResponseId() == null) this.logResponseId(annotation.response.idIncluded)
+        if (this.logResponseTookTime() == null) this.logResponseTookTime(annotation.response.tookTimeIncluded)
+        if (this.logResponseUri() == null) this.logResponseUri(annotation.response.uriIncluded)
+        if (this.logResponseHeaders() == null) this.logResponseHeaders(annotation.response.headersIncluded)
+        if (this.logResponseBody() == null) this.logResponseBody(annotation.response.bodyIncluded)
+    }
+
     open fun afterChain(
         rqId: String,
         request: HttpServletRequest,
@@ -119,7 +151,8 @@ open class ServletLoggingFilter(
         startTime: Long,
     ) {
         try {
-            if (helper.loggingLevel == Level.OFF) {
+            val loggingLevel =properties.response.loggingLevel.javaLevel
+            if (loggingLevel == Level.OFF) {
                 return
             }
             response.setHeader("RQ_ID", rqId)
@@ -144,7 +177,8 @@ open class ServletLoggingFilter(
         rqId: String,
         startTime: Long,
     ) {
-        if (helper.loggingLevel == Level.OFF) {
+        val loggingLevel =properties.request.loggingLevel.javaLevel
+        if (loggingLevel == Level.OFF) {
             return
         }
 
@@ -193,7 +227,7 @@ open class ServletLoggingFilter(
                         return@constructRqBody request.bodyContentString()
                     }
                 }
-            servletLogger.log(helper.loggingLevel, logString)
+            servletLogger.log(loggingLevel, logString)
         } catch (t: Throwable) {
             servletLogger.log(Level.SEVERE, "", t)
         }
@@ -210,6 +244,10 @@ open class ServletLoggingFilter(
         rqId: String,
         time: Long,
     ) {
+        val loggingLevel =properties.response.loggingLevel.javaLevel
+        if (loggingLevel == Level.OFF) {
+            return
+        }
         val logString =
             constructRsBody(rqId, response, request, time) {
                 val haveToLogBody = request.logResponseBody() ?: properties.response.bodyIncluded
@@ -221,7 +259,7 @@ open class ServletLoggingFilter(
                 }
                 return@constructRsBody String(response.contentAsByteArray, Charset.forName(response.characterEncoding))
             }
-        servletLogger.log(helper.loggingLevel, logString)
+        servletLogger.log(loggingLevel, logString)
     }
 
     /**
@@ -243,7 +281,7 @@ open class ServletLoggingFilter(
         val message =
             listOf(
                 helper.getHeaderLine(type),
-                helper.getIdString(rqId, type),
+                helper.getIdString(request.logRequestId(),rqId, type),
                 helper.getUriString(request.logRequestUri(), "${request.method} ${request.getFormattedUriString()}", type),
                 helper.getTookString(request.logRequestTookTime(), time, type),
                 helper.getHeadersString(request.logRequestHeaders(), request.getHeadersMultiMap(), type),

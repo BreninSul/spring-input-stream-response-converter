@@ -15,14 +15,14 @@ import io.github.breninsul.servlet.logging.ServletLoggerProperties
  * sensor information, headers, URI, and body information should be included.
  * @property responseSettings Configures the logging behavior for HTTP responses, similar to request settings.
  */
-@kotlin.annotation.Target
-@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FUNCTION,AnnotationTarget.CLASS,AnnotationTarget.ANNOTATION_CLASS)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class ServletLoggingFilter(
     val loggingLevel: JavaLoggingLevel = JavaLoggingLevel.INFO,
     val requestSettings: HttpLogSettings = HttpLogSettings(tookTimeIncluded = false),
     val responseSettings: HttpLogSettings = HttpLogSettings(),
 )
 
-fun ServletLoggingFilter.toServletLoggingFilter():ServletLoggerProperties{
+fun ServletLoggingFilter.toServletLoggerProperties():ServletLoggerProperties{
     return ServletLoggerProperties(true,loggingLevel,requestSettings.toServletHttpRequestLogSettings(),responseSettings.toServletHttpRequestLogSettings())
 }

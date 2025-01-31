@@ -26,11 +26,9 @@ package io.github.breninsul.servlet.logging
 
 import io.github.breninsul.logging.HttpConfigHeaders
 import io.github.breninsul.logging.HttpConfigHeaders.TECHNICAL_HEADERS
-import io.github.breninsul.logging.HttpMaskSettings
 import io.github.breninsul.logging.JavaLoggingLevel
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import java.util.logging.Level
 
 /**
  * Returns the formatted query string for the current HTTP servlet request.
@@ -116,6 +114,48 @@ fun HttpServletRequest.loggingLevel(level: JavaLoggingLevel?) {
  * @return The logging level attribute value as set in the request, or `null` if the attribute is not present.
  */
 fun HttpServletRequest.loggingLevel() = getAttribute(HttpConfigHeaders.LOG_LOGGING_LEVEL) as JavaLoggingLevel?
+
+/**
+ * Sets the logging level for an HTTP request by adding it as an attribute to the request.
+ *
+ * @param level The desired logging level to be set for the HTTP request. Can be null if no specific logging level is required.
+ */
+fun HttpServletRequest.requestLoggingLevel(level: JavaLoggingLevel?) = setAttribute(HttpConfigHeaders.LOG_REQUEST_LOGGING_LEVEL,level)
+
+/**
+ * Retrieves the logging level for the request from the servlet request attributes.
+ *
+ * This function accesses the attribute with the key defined in `HttpConfigHeaders.LOG_REQUEST_LOGGING_LEVEL`
+ * and casts it to `JavaLoggingLevel?`. If the attribute is not set or is of an incompatible type, it will return `null`.
+ *
+ * @receiver The `HttpServletRequest` from which the logging level attribute is retrieved.
+ * @return The logging level for the request as a `JavaLoggingLevel?`, or `null` if not available.
+ */
+fun HttpServletRequest.requestLoggingLevel() = getAttribute(HttpConfigHeaders.LOG_REQUEST_LOGGING_LEVEL) as JavaLoggingLevel?
+
+/**
+ * Sets an attribute in the HttpServletRequest to enable or disable logging of the request ID.
+ *
+ * @param enable A boolean value to indicate whether logging of the request ID should be enabled (true),
+ * disabled (false), or null for no action.
+ */
+fun HttpServletRequest.logRequestId(enable: Boolean?) = setAttribute(HttpConfigHeaders.LOG_REQUEST_ID,enable)
+
+/**
+ * Retrieves the logging ID associated with the current HTTP request.
+ *
+ * This method attempts to fetch the value of the attribute defined by the
+ * `LOG_REQUEST_ID` constant in the `HttpConfigHeaders` class from the request.
+ * The value is expected to be a `Boolean?`, or `null` if the attribute is
+ * not found or is undefined.
+ *
+ * @receiver The HttpServletRequest instance from which the logging ID is
+ * retrieved.
+ * @return A nullable Boolean indicating the presence or state of the logging
+ * ID, or `null` if unavailable.
+ */
+fun HttpServletRequest.logRequestId() = getAttribute(HttpConfigHeaders.LOG_REQUEST_ID) as Boolean?
+
 
 /**
  * Sets the value of the attribute `HttpConfigHeaders.LOG_REQUEST_URI` to enable or disable logging of request URI.
@@ -305,6 +345,44 @@ fun HttpServletRequest.loggingRequestMaskFormKeys(queryParameters:  List<String>
  */
 fun HttpServletRequest.loggingRequestMaskFormKeys() = getAttribute(HttpConfigHeaders.LOG_REQUEST_MASK_FORM_DATA_BODY_KEYS) as List<String>?
 
+
+/**
+ * Sets the response logging level for the current HTTP servlet request.
+ *
+ * @param level The logging level to set for response logging. Can be null to indicate that no specific logging level is set.
+ */
+fun HttpServletRequest.responseLoggingLevel(level: JavaLoggingLevel?) = setAttribute(HttpConfigHeaders.LOG_RESPONSE_LOGGING_LEVEL,level)
+
+/**
+ * Retrieves the logging level for response logging associated with the current HTTP request.
+ *
+ * This method accesses the request attribute defined by [HttpConfigHeaders.LOG_RESPONSE_LOGGING_LEVEL] and casts it to
+ * [JavaLoggingLevel]. The retrieved logging level determines the verbosity or detail of the response logs.
+ *
+ * @receiver HttpServletRequest instance from which the logging level is fetched.
+ * @return The logging level as [JavaLoggingLevel], or `null` if no logging level is set for the request.
+ */
+fun HttpServletRequest.responseLoggingLevel() = getAttribute(HttpConfigHeaders.LOG_RESPONSE_LOGGING_LEVEL) as JavaLoggingLevel?
+
+/**
+ * Sets the logging configuration for response IDs in the current HTTP request.
+ *
+ * @param enable A Boolean flag indicating whether response ID logging should be enabled (true)
+ * or disabled (false). If null, no value will be explicitly set.
+ */
+fun HttpServletRequest.logResponseId(enable: Boolean?) = setAttribute(HttpConfigHeaders.LOG_RESPONSE_ID,enable)
+
+/**
+ * Retrieves the logging status for the HTTP response's unique identifier.
+ *
+ * This method checks if response logging is enabled by retrieving the value
+ * associated with the `LOG_RESPONSE_ID` attribute from the current `HttpServletRequest`.
+ *
+ * @receiver HttpServletRequest from which the `LOG_RESPONSE_ID` attribute is accessed.
+ * @return A `Boolean?` indicating whether response logging is enabled (`true`),
+ *         disabled (`false`), or `null` if the attribute is not set.
+ */
+fun HttpServletRequest.logResponseId() = getAttribute(HttpConfigHeaders.LOG_RESPONSE_ID) as Boolean?
 
 
 /**

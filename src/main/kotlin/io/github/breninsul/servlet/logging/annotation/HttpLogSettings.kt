@@ -1,31 +1,33 @@
 package io.github.breninsul.servlet.logging.annotation
 
+import io.github.breninsul.logging.JavaLoggingLevel
 import io.github.breninsul.servlet.logging.ServletHttpRequestLogSettings
 
 /**
- * Annotation to configure HTTP logging settings for servlet requests and responses.
+ * Annotation for configuring HTTP logging settings.
  *
- * This annotation allows customization of the logging behavior, including which parts of the HTTP
- * request or response are included in the logs, the maximum body size for logging, and masking sensitive
- * information. It is designed to be paired with other annotations, enabling detailed and secure
- * logging for HTTP communication.
+ * This annotation specifies the customizable options for logging HTTP request and response data.
+ * It is useful for controlling the granularity and content of the logs for HTTP interactions.
+ * The configuration includes options for logging levels, inclusion of specific request/response details,
+ * and masking sensitive information.
  *
- * @property idIncluded Indicates whether the unique request or response identifier should be included in the logs.
+ * @property loggingLevel Specifies the logging level to be used for this setting.
+ * This allows logging granularity control such as DEBUG, INFO, WARN, etc.
+ * @property idIncluded Indicates whether the unique ID for the request should be included in the logs.
  * @property uriIncluded Indicates whether the URI of the request should be logged.
- * @property tookTimeIncluded Indicates whether the time taken to process the request or response should be logged.
- * @property headersIncluded Indicates whether HTTP headers should be logged.
- * @property bodyIncluded Indicates whether the body of the HTTP request or response should be logged.
- * @property maxBodySize Specifies the maximum size of the body, in bytes, to be included in the logs. Bodies
- * exceeding this size will be truncated.
- * @property mask Configures masking rules for sensitive data in headers, query parameters, and body content
- * to prevent exposure of confidential information in the logs.
- * @property bodySizeToUseTempFileCaching Specifies the threshold size, in bytes, at which the body content
- * will be temporarily cached to a file for logging, rather than stored in memory. This
- * helps manage memory usage for larger payloads.
+ * @property tookTimeIncluded Indicates whether the time taken to process the request/response should be included.
+ * @property headersIncluded Configures whether headers should be included in the logs.
+ * @property bodyIncluded Determines whether the body of the request/response should be logged or excluded.
+ * @property maxBodySize Defines the maximum size of the body that can be logged. Excessive size is truncated.
+ * @property mask Configures the masking rules for sensitive data, such as headers or body content, using `HttpMaskSettings`.
+ * This ensures the security of sensitive data in the logs.
+ * @property bodySizeToUseTempFileCaching Configures the threshold size (in bytes) at which temporary file caching
+ * should be used for large body contents, to avoid excessive memory usage.
  */
-@kotlin.annotation.Target
-@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+@Target
+@Retention(AnnotationRetention.RUNTIME)
 annotation class HttpLogSettings(
+    val loggingLevel: JavaLoggingLevel = JavaLoggingLevel.INFO,
     val idIncluded: Boolean = true,
     val uriIncluded: Boolean = true,
     val tookTimeIncluded: Boolean = true,
@@ -48,5 +50,5 @@ annotation class HttpLogSettings(
  * rules, and body size threshold for temporary file caching.
  */
 fun HttpLogSettings.toServletHttpRequestLogSettings(): ServletHttpRequestLogSettings {
-    return ServletHttpRequestLogSettings(idIncluded, uriIncluded, tookTimeIncluded, headersIncluded, bodyIncluded, maxBodySize,mask.toHttpMaskSettings(),bodySizeToUseTempFileCaching)
+    return ServletHttpRequestLogSettings(loggingLevel,idIncluded, uriIncluded, tookTimeIncluded, headersIncluded, bodyIncluded, maxBodySize,mask.toHttpMaskSettings(),bodySizeToUseTempFileCaching)
 }

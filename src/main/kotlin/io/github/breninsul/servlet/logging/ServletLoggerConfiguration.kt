@@ -36,6 +36,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory
 import org.springframework.context.annotation.Bean
+import org.springframework.web.servlet.HandlerMapping
 
 @ConditionalOnProperty(value = ["servlet.logging-interceptor.enabled"], havingValue = "true", matchIfMissing = true)
 @AutoConfiguration
@@ -44,7 +45,7 @@ open class ServletLoggerConfiguration {
     @Bean(name = ["ServletLoggingFilter"], value = ["ServletLoggingFilter"])
     @ConditionalOnClass(ServletWebServerFactory::class)
     @ConditionalOnMissingBean(name = ["ServletLoggingFilter"])
-    fun loggingFilter(properties: ServletLoggerProperties): FilterRegistrationBean<ServletLoggingFilter> {
+    fun loggingFilter(properties: ServletLoggerProperties,handlerMappings: List<HandlerMapping>): FilterRegistrationBean<ServletLoggingFilter> {
         val requestMaskers =
             listOf(
                 servletRequestRegexJsonBodyMasking(properties.request.mask),
@@ -57,7 +58,7 @@ open class ServletLoggerConfiguration {
             )
         val uriMaskers = listOf(servletUriMasking(properties.request.mask))
         val registrationBean = FilterRegistrationBean<ServletLoggingFilter>()
-        val servletLoggingFilter = ServletLoggingFilter(properties, uriMaskers, requestMaskers, responseMaskers)
+        val servletLoggingFilter = ServletLoggingFilter(properties, uriMaskers, requestMaskers, responseMaskers,handlerMappings)
         registrationBean.filter = servletLoggingFilter
         registrationBean.order = servletLoggingFilter.order
         return registrationBean

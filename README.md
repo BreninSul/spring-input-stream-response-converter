@@ -9,9 +9,11 @@ Logging filter implementation and stater to auto register it in Spring context
 | Parameter                                                                  | Type             | Description                                                             |
 |----------------------------------------------------------------------------|------------------|-------------------------------------------------------------------------|
 | `servlet.logging-interceptor.enabled`                                      | Boolean          | Enable autoconfig for this starter                                      |
-| `servlet.logging-interceptor.logging-level`                                | JavaLoggingLevel | Logging level of messages                                               |
+| `servlet.logging-interceptor.resolve-handler-annotation`                   | Boolean          | Enable resolving annotation @ServletLoggingFilter  on controllers       |
+| `servlet.logging-interceptor.logging-level`                                | JavaLoggingLevel | Base Logging level of messages                                          |
 | `servlet.logging-interceptor.order`                                        | Int              | Filter order (Ordered interface)                                        |
 | `servlet.logging-interceptor.new-line-column-symbols`                      | Int              | How many symbols in first column (param name)                           |
+| `servlet.logging-interceptor.request.logging-level`                        | Boolean          | Logging level (request) if not equals the base one                      |
 | `servlet.logging-interceptor.request.id-included`                          | Boolean          | Is request id included to log message (request)                         |
 | `servlet.logging-interceptor.request.uri-included`                         | Boolean          | Is uri included to log message (request)                                |
 | `servlet.logging-interceptor.request.took-time-included`                   | Boolean          | Is timing included to log message (request)                             |
@@ -23,6 +25,7 @@ Logging filter implementation and stater to auto register it in Spring context
 | `servlet.logging-interceptor.request.mask.mask-query-parameters`           | String           | Comma separated query parameters to mask in logs (request/response)     |
 | `servlet.logging-interceptor.request.mask.mask-mask-json-body-keys`        | String           | Comma separated body json keys(fields) to mask in logs (request)        |
 | `servlet.logging-interceptor.request.mask.mask-mask-form-urlencoded-body`  | String           | Comma separated form urlencoded keys(fields) to mask in logs (request)  |
+| `servlet.logging-interceptor.response.logging-level`                       | Boolean          | Logging level (response) if not equals the base one                     |
 | `servlet.logging-interceptor.response.id-included`                         | Boolean          | Is request id included to log message (response)                        |
 | `servlet.logging-interceptor.response.uri-included`                        | Boolean          | Is uri included to log message (response)                               |
 | `servlet.logging-interceptor.response.took-time-included`                  | Boolean          | Is timing included to log message (response)                            |
