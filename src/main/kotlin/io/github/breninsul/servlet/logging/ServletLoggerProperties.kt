@@ -38,6 +38,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
  * @param response The settings for logging the response. Default settings are used if not specified.
  * @param order The order in which the ServletLogger should be executed. Default is 0.
  * @param newLineColumnSymbols The number of symbols used for displaying new line characters in logs. Default is 14.
+ * @param resolveHandlerAnnotation whether try to find @
  */
 @ConfigurationProperties("servlet.logging-interceptor")
 open class ServletLoggerProperties(
@@ -47,6 +48,7 @@ open class ServletLoggerProperties(
     var response: HttpLogSettings = HttpLogSettings(),
     var order: Int = Int.MIN_VALUE,
     var newLineColumnSymbols: Int = 14,
+    var resolveHandlerAnnotation: Boolean = false,
 ) {
     open fun toHttpLoggingProperties() = HttpLoggingProperties(enabled, loggingLevel, request, response, order, newLineColumnSymbols)
 }

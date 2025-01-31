@@ -28,12 +28,15 @@ import io.github.breninsul.logging.HttpLoggingHelper
 import io.github.breninsul.servlet.logging.caching.request.ServletCachingRequestWrapper
 import io.github.breninsul.servlet.logging.caching.request.ServletCachingRequestWrapperByteArray
 import io.github.breninsul.servlet.logging.caching.request.ServletCachingRequestWrapperFile
+import io.github.breninsul.servlet.logging.handlerResolver.DefaultRequestHandlerLoggingAnnotationResolver
+import io.github.breninsul.servlet.logging.handlerResolver.RequestHandlerLoggingAnnotationResolver
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.servlet.http.Part
 import org.springframework.core.Ordered
 import org.springframework.web.filter.OncePerRequestFilter
+import org.springframework.web.servlet.HandlerMapping
 import org.springframework.web.util.ContentCachingResponseWrapper
 import java.nio.charset.Charset
 import java.util.*
@@ -42,22 +45,39 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 /**
- * ServletLoggingFilter is a filter that logs HTTP requests and responses for a servlet application.
- *
- * This filter wraps around incoming requests and outgoing responses to capture and log
- * relevant data based on the provided configuration.
- *
- * @property properties The configuration properties for logging.
- * @property helper An instance of HttpLoggingHelper to assist with logging operations.
- * @property servletLogger A Logger instance for logging any errors that occur during processing.
+ * Represents the constant key for the request attribute used to store the controller information
+ * in a servlet-based logging or routing context. This constant can be used to manage or retrieve
+ * metadata about the controller handling the request.
  */
+const val ATTRIBUTE_REQUEST_HANDLER_LOGGING_ANNOTATION = "ATTRIBUTE_REQUEST_HANDLER_LOGGING_ANNOTATION"
+
 open class ServletLoggingFilter(
     protected open val properties: ServletLoggerProperties,
     uriMaskers: List<ServletUriMasking>,
     requestBodyMaskers: List<ServletRequestBodyMasking>,
     responseBodyMaskers: List<ServletResponseBodyMasking>,
+    handlerMappings: List<HandlerMapping>,
+    protected open val requestHandlerResolver: RequestHandlerLoggingAnnotationResolver = DefaultRequestHandlerLoggingAnnotationResolver(handlerMappings)
 ) : OncePerRequestFilter(),
     Ordered {
+    /**
+     * Secondary constructor of the `ServletLoggingFilter` class that initializes the filter
+     * with logging properties and lists of masking strategies for URIs, request bodies, and
+     * response bodies. This constructor also initializes the field with an empty list
+     * for any additional filter configurations. Used to support previous version constructor
+     *
+     * @param properties Configuration properties for servlet logging.
+     * @param uriMaskers List of URI masking strategies.
+     * @param requestBodyMaskers List of request body masking strategies.
+     * @param responseBodyMaskers List of response body masking strategies.
+     */
+    constructor(
+        properties: ServletLoggerProperties,
+        uriMaskers: List<ServletUriMasking>,
+        requestBodyMaskers: List<ServletRequestBodyMasking>,
+        responseBodyMaskers: List<ServletResponseBodyMasking>,
+    ) : this(properties, uriMaskers, requestBodyMaskers, responseBodyMaskers, listOf())
+
     protected open val helper = HttpLoggingHelper("Servlet", properties.toHttpLoggingProperties(), uriMaskers, requestBodyMaskers, responseBodyMaskers)
     protected open val servletLogger: Logger = Logger.getLogger(ServletLoggingFilter::class.java.name)
 
@@ -71,6 +91,10 @@ open class ServletLoggingFilter(
         }
         val time = System.currentTimeMillis()
         try {
+            if (properties.resolveHandlerAnnotation){
+                val annotationSettings=requestHandlerResolver.findAnnotationSettings(request)
+
+            }
             val id = helper.getIdString()
             val wrappedRequest = wrapRequest(request)
             val wrappedResponse = wrapResponse(wrappedRequest, response)
@@ -178,7 +202,8 @@ open class ServletLoggingFilter(
     /**
      * Logs the HTTP response.
      *
-     * @param request*/
+     * @param request
+     */
     protected open fun logResponse(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -262,7 +287,8 @@ open class ServletLoggingFilter(
     }
 
     /**
-     * Wraps the given HttpServletRequest object to provide caching functionality for the request body if necessary.
+     * Wraps the given HttpServletRequest object to provide caching
+     * functionality for the request body if necessary.
      *
      * @param request The HttpServletRequest object to be wrapped.
      * @return The wrapped HttpServletRequest object.
@@ -292,7 +318,8 @@ open class ServletLoggingFilter(
     }
 
     /**
-     * Wraps the given HttpServletResponse with a ContentCachingResponseWrapper.
+     * Wraps the given HttpServletResponse with a
+     * ContentCachingResponseWrapper.
      *
      * @param response The HttpServletResponse to be wrapped.
      * @return The ContentCachingResponseWrapper that wraps the given response.
