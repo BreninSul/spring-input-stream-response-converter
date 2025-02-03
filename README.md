@@ -45,7 +45,7 @@ add the following dependency:
 ````kotlin
 dependencies {
 //Other dependencies
-    implementation("io.github.breninsul:servlet-logging-starter:1.1.0")
+    implementation("io.github.breninsul:servlet-logging-starter:2.0.0")
 //Other dependencies
 }
 
@@ -56,7 +56,7 @@ dependencies {
 ===========================Servlet Request begin===========================
 =ID           : 4079-74
 =URI          : POST /test
-=Headers      : user-agent:PostmanRuntime/7.40.0;accept:*/*;postman-token:55500dec-8c8e-4925-abe0-350b4c1cc594;host:127.0.0.1:8080;accept-encoding:gzip, deflate, br;connection:keep-alive;content-type:multipart/form-data; boundary=--------------------------468571742219419283376118;content-length:57001384
+=Headers      : authorisation:<MASKED>;user-agent:PostmanRuntime/7.40.0;accept:*/*;postman-token:55500dec-8c8e-4925-abe0-350b4c1cc594;host:127.0.0.1:8080;accept-encoding:gzip, deflate, br;connection:keep-alive;content-type:multipart/form-data; boundary=--------------------------468571742219419283376118;content-length:57001384
 =Body         : sosadsadasd:application/zip:<FILE 3846228 bytes>;sss:text/plain:asdsad
 ===========================Servlet Request end  ===========================
 
@@ -66,9 +66,44 @@ dependencies {
 =URI          : 200 POST /test
 =Took         : 229 ms
 =Headers      : TestHeader:TestVal;RQ_ID:4079-74;Content-Length:5
-=Body         : TEST!
+=Body         : {"token":"<MASKED>","status":"OK"}
 ===========================Servlet Response end  ===========================
 ````
+
+### Example defining custom properties
+
+````properties
+
+servlet.logging-interceptor.request.logging-level=severe
+servlet.logging-interceptor.request.id-included=false
+servlet.logging-interceptor.request.uri-included=false
+servlet.logging-interceptor.request.took-time-included=false
+servlet.logging-interceptor.request.headers-included=false
+servlet.logging-interceptor.request.body-included=false
+servlet.logging-interceptor.response.logging-level=severe
+servlet.logging-interceptor.response.id-included=false
+servlet.logging-interceptor.response.uri-included=false
+servlet.logging-interceptor.response.took-time-included=false
+servlet.logging-interceptor.response.headers-included=false
+servlet.logging-interceptor.response.body-included=false
+servlet.logging-interceptor.request.mask.mask-headers=headerToMask
+servlet.logging-interceptor.request.mask.mask-query-parameters=queryParamToMask
+servlet.logging-interceptor.request.mask.mask-body-keys.form=formKeyToMask
+servlet.logging-interceptor.request.mask.mask-body-keys.json=jsonKeyToMask
+servlet.logging-interceptor.response.mask.mask-headers=headerToMask
+servlet.logging-interceptor.response.mask.mask-query-parameters=queryParamToMask
+servlet.logging-interceptor.response.mask.mask-body-keys.form=formKeyToMask
+servlet.logging-interceptor.response.mask.mask-body-keys.json=jsonKeyToMask
+
+````
+
+### Example defining route config (Kotlin)
+
+[Example defining Route config (Kotlin)](src/test/kotlin/io/github/breninsul/servlet/logging2/examples/ExampleKotlinRoutes.kt)
+[Example defining Route config (Java)](src/test/kotlin/io/github/breninsul/servlet/logging2/examples/ExampleJavaRoutes.java)
+
+[Example defining Controller annotation config (Kotlin)](src/test/kotlin/io/github/breninsul/servlet/logging2/examples/ExampleKotlinController.kt)
+[Example defining Controller annotation config (Kotlin)](src/test/kotlin/io/github/breninsul/servlet/logging2/examples/ExampleJavaController.java)
 
 
 
