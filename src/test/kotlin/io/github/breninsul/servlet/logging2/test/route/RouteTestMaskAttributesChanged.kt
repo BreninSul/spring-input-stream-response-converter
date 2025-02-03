@@ -28,7 +28,7 @@ class RouteTestMaskAttributesChanged {
         val formData: MutableMap<String, String> = HashMap()
         formData["formKeyToMask"] = "SECRET"
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://127.0.0.1:5367/test-route-custom-mask?queryParamToMask=SECRET"))
+            .uri(URI.create("http://127.0.0.1:5367/test-route-custom-mask-2?queryParamToMask=SECRET"))
             .header("headerToMask", "SECRET")
             .header("Content-Type", "application/x-www-form-urlencoded")
             .POST(HttpRequest.BodyPublishers.ofString(formData.toFormDataAsString()))

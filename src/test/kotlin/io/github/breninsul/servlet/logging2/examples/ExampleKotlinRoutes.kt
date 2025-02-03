@@ -4,7 +4,7 @@ import io.github.breninsul.logging2.FormBodyType
 import io.github.breninsul.logging2.JavaLoggingLevel
 import io.github.breninsul.logging2.JsonBodyType
 import io.github.breninsul.servlet.logging2.*
-import io.github.breninsul.servlet.logging2.route.processRequest
+import io.github.breninsul.servlet.logging2.route.*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.function.RouterFunction
@@ -14,10 +14,49 @@ import org.springframework.web.servlet.function.ServerResponse
 
 @Configuration
 class ExampleKotlinRoutes {
-
-
     @Bean
     fun exampleAttributesBuilderRouteKotlin(): RouterFunction<ServerResponse> {
+        return RouterFunctions
+            .route()
+            .requestLoggingLevel(JavaLoggingLevel.INFO)
+            .logRequestId(true)
+            .logRequestUri(true)
+            .logRequestTookTime(true)
+            .logRequestHeaders(true)
+            .logRequestBody(true)
+            .responseLoggingLevel(JavaLoggingLevel.INFO)
+            .logResponseId(true)
+            .logResponseUri(true)
+            .logResponseTookTime(true)
+            .logResponseHeaders(true)
+            .logResponseBody(true)
+            .loggingRequestMaskQueryParameters(listOf("tempToken"))
+            .loggingResponseMaskQueryParameters(listOf("tempToken"))
+            .loggingRequestMaskHeaders(listOf("Authorization"))
+            .loggingResponseMaskHeaders(listOf("ServerInfo"))
+            .loggingRequestMaskBodyKeys(
+                mapOf(
+                    JsonBodyType to listOf("yourJsonPropertyNameToMask", "password"),
+                    FormBodyType to listOf("yourFormFieldyNameToMask", "authorisation")
+                )
+            )
+            .loggingResponseMaskBodyKeys(
+                mapOf(
+                    JsonBodyType to listOf("yourJsonPropertyNameToMask", "password"),
+                    FormBodyType to listOf("yourFormFieldyNameToMask", "authorisation")
+                )
+            )
+            .POST("/example-attributes-route-kotlin-builder") { serverRq ->
+                return@POST ServerResponse
+                    .ok()
+                    .header("ServerInfoHeader", "SecretInfo")
+                    .body(mapOf("password" to "1234"))
+            }
+            .build()
+    }
+
+    @Bean
+    fun exampleProcessorBuilderRouteKotlin(): RouterFunction<ServerResponse> {
         return RouterFunctions
             .route()
             .processRequest {
@@ -37,8 +76,18 @@ class ExampleKotlinRoutes {
                 it.loggingResponseMaskQueryParameters(listOf("tempToken"))
                 it.loggingRequestMaskHeaders(listOf("Authorization"))
                 it.loggingResponseMaskHeaders(listOf("ServerInfo"))
-                it.loggingRequestMaskBodyKeys(mapOf(JsonBodyType to listOf("yourJsonPropertyNameToMask", "password"), FormBodyType to listOf("yourFormFieldyNameToMask", "authorisation")))
-                it.loggingResponseMaskBodyKeys(mapOf(JsonBodyType to listOf("yourJsonPropertyNameToMask", "password"), FormBodyType to listOf("yourFormFieldyNameToMask", "authorisation")))
+                it.loggingRequestMaskBodyKeys(
+                    mapOf(
+                        JsonBodyType to listOf("yourJsonPropertyNameToMask", "password"),
+                        FormBodyType to listOf("yourFormFieldyNameToMask", "authorisation")
+                    )
+                )
+                it.loggingResponseMaskBodyKeys(
+                    mapOf(
+                        JsonBodyType to listOf("yourJsonPropertyNameToMask", "password"),
+                        FormBodyType to listOf("yourFormFieldyNameToMask", "authorisation")
+                    )
+                )
             }
             .POST("/example-attributes-route-kotlin-builder") { serverRq ->
                 return@POST ServerResponse
@@ -70,8 +119,18 @@ class ExampleKotlinRoutes {
                 rq.loggingResponseMaskQueryParameters(listOf("tempToken"))
                 rq.loggingRequestMaskHeaders(listOf("Authorization"))
                 rq.loggingResponseMaskHeaders(listOf("ServerInfo"))
-                rq.loggingRequestMaskBodyKeys(mapOf(JsonBodyType to listOf("yourJsonPropertyNameToMask", "password"), FormBodyType to listOf("yourFormFieldyNameToMask", "authorisation")))
-                rq.loggingResponseMaskBodyKeys(mapOf(JsonBodyType to listOf("yourJsonPropertyNameToMask", "password"), FormBodyType to listOf("yourFormFieldyNameToMask", "authorisation")))
+                rq.loggingRequestMaskBodyKeys(
+                    mapOf(
+                        JsonBodyType to listOf("yourJsonPropertyNameToMask", "password"),
+                        FormBodyType to listOf("yourFormFieldyNameToMask", "authorisation")
+                    )
+                )
+                rq.loggingResponseMaskBodyKeys(
+                    mapOf(
+                        JsonBodyType to listOf("yourJsonPropertyNameToMask", "password"),
+                        FormBodyType to listOf("yourFormFieldyNameToMask", "authorisation")
+                    )
+                )
                 return@before rq
             }
             .POST("/example-attributes-route-kotlin-before") { serverRq ->
