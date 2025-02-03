@@ -1,7 +1,10 @@
 package io.github.breninsul.servlet.logging2.examples;
 
 import io.github.breninsul.logging2.JavaLoggingLevel;
-import io.github.breninsul.servlet.logging2.annotation.*;
+import io.github.breninsul.servlet.logging2.annotation.HttpBodyMaskSettings;
+import io.github.breninsul.servlet.logging2.annotation.HttpLogSettings;
+import io.github.breninsul.servlet.logging2.annotation.HttpMaskSettings;
+import io.github.breninsul.servlet.logging2.annotation.ServletLoggingFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +21,12 @@ public class ExampleJavaController {
             loggingLevel = JavaLoggingLevel.SEVERE,
             requestSettings = @HttpLogSettings(
                     loggingLevel = JavaLoggingLevel.SEVERE,
+                    idIncluded = true,
+                    uriIncluded = true,
+                    maxBodySize = Integer.MAX_VALUE,
                     tookTimeIncluded = false,
+                    headersIncluded = true,
+                    bodyIncluded = true,
                     mask = @HttpMaskSettings(
                             maskQueryParameters = {"queryParamToMask"},
                             maskHeaders = {"headerToMask"},
@@ -26,6 +34,12 @@ public class ExampleJavaController {
             ),
             responseSettings = @HttpLogSettings(
                     loggingLevel = JavaLoggingLevel.SEVERE,
+                    maxBodySize = Integer.MAX_VALUE,
+                    idIncluded = true,
+                    uriIncluded = true,
+                    tookTimeIncluded = true,
+                    headersIncluded = true,
+                    bodyIncluded = true,
                     mask = @HttpMaskSettings(
                             maskQueryParameters = {"queryParamToMask"},
                             maskHeaders = {"headerToMask"},
