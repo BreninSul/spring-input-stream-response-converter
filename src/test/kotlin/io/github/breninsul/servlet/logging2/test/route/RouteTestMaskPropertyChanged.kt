@@ -42,6 +42,7 @@ class RouteTestMaskPropertyChanged {
         var baos: ByteArrayOutputStream = ByteArrayOutputStream()
         System.setOut(PrintStream(baos));
         val send = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        Thread.sleep(100)
         assert(!baos.toString(UTF_8).contains("SECRET"))
     }
 

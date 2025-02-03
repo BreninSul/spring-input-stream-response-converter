@@ -35,8 +35,9 @@ class ControllerTestDefault {
         var baos: ByteArrayOutputStream = ByteArrayOutputStream()
         System.setOut(PrintStream(baos));
         val send = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        Thread.sleep(100)
         val lines=baos.toString(UTF_8.name()).lines()
-        assert(lines.filter { it.contains("i.g.b.s.logging.ServletLoggingFilter") }.any { it.contains("INFO") })
+        assert(lines.filter { it.contains("i.g.b.s.l.filter.ServletLoggingFilter") }.any { it.contains("INFO") })
         val firstLine=lines.indexOf("===========================Servlet Request begin===========================" )
         val realLines=lines.subList(firstLine,lines.size)
         assert(realLines[1].startsWith("=ID"))
@@ -57,6 +58,7 @@ class ControllerTestDefault {
         var baos: ByteArrayOutputStream = ByteArrayOutputStream()
         System.setOut(PrintStream(baos));
         val send = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        Thread.sleep(100)
         val lines=baos.toString(UTF_8.name()).lines()
         val firstLine=lines.indexOf("===========================Servlet Response begin===========================" )
         val realLines=lines.subList(firstLine,lines.size)

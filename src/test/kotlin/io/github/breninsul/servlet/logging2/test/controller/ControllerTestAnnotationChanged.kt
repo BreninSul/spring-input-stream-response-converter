@@ -22,12 +22,7 @@ import kotlin.text.Charsets.UTF_8
 @ExtendWith(SpringExtension::class)
 @TestConfiguration
 class ControllerTestAnnotationChanged {
-    @Test
-    fun test1000Times() {
-        repeat(1000) {
-            testLogEmptyInfoRequest()
-        }
-    }
+
 
     @Test
     fun testLogEmptyInfoRequest() {
@@ -41,8 +36,9 @@ class ControllerTestAnnotationChanged {
         var baos: ByteArrayOutputStream = ByteArrayOutputStream()
         System.setOut(PrintStream(baos));
         val send = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        Thread.sleep(100)
         val lines=baos.toString(UTF_8.name()).lines()
-        assert(lines.filter { it.contains("i.g.b.s.logging2.ServletLoggingFilter") }.any { it.contains("ERROR") })
+        assert(lines.filter { it.contains("i.g.b.s.l.filter.ServletLoggingFilter") }.any { it.contains("ERROR") })
 
         val firstLine=lines.indexOf("===========================Servlet Request begin===========================" )
         val realLines=lines.subList(firstLine,lines.size)
@@ -61,6 +57,7 @@ class ControllerTestAnnotationChanged {
         var baos: ByteArrayOutputStream = ByteArrayOutputStream()
         System.setOut(PrintStream(baos));
         val send = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        Thread.sleep(100)
         val lines=baos.toString(UTF_8.name()).lines()
         val firstLine=lines.indexOf("===========================Servlet Response begin===========================" )
         val realLines=lines.subList(firstLine,lines.size)

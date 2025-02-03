@@ -240,7 +240,7 @@ open class ServletLoggerService(
         val haveToLogBody = request.logRequestBody() ?: properties.request.bodyIncluded
         if (!haveToLogBody) {
             request.logRequestBody(false)
-            return request
+//            return request
         }
         val isMultipart = request.isMultipart()
 
