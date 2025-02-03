@@ -2,7 +2,7 @@ package io.github.breninsul.servlet.logging2
 
 import io.github.breninsul.logging2.FormBodyType
 import io.github.breninsul.logging2.JsonBodyType
-import io.github.breninsul.servlet.logging2.route.*
+import io.github.breninsul.servlet.logging2.route.processRequest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.function.RouterFunction
@@ -58,18 +58,21 @@ class TestRoute {
     fun testPostRouteCustomMaskAttributes(): RouterFunction<ServerResponse> {
         return RouterFunctions
             .route()
+            .processRequest {
+                it.logResponseBody(false)
+                it.loggingRequestMaskQueryParameters(listOf("queryParamToMask"))
+                it.loggingResponseMaskQueryParameters(listOf("queryParamToMask"))
+                it.loggingRequestMaskHeaders(listOf("headerToMask"))
+                it.loggingResponseMaskHeaders(listOf("headerToMask"))
+                it.loggingRequestMaskBodyKeys(mapOf(JsonBodyType to listOf("jsonKeyToMask"), FormBodyType to listOf("formKeyToMask")))
+                it.loggingResponseMaskBodyKeys(mapOf(JsonBodyType to listOf("jsonKeyToMask"), FormBodyType to listOf("formKeyToMask")))
+            }
             .POST("/test-route-custom-mask") { serverRq ->
                 val rq = serverRq.body(String::class.java)
                 return@POST ServerResponse.ok()
                     .header("headerToMask", "SECRET")
                     .body(mapOf("jsonKeyToMask" to "SECRET"))
             }
-            .loggingRequestMaskQueryParameters(listOf("queryParamToMask"))
-            .loggingResponseMaskQueryParameters(listOf("queryParamToMask"))
-            .loggingRequestMaskHeaders(listOf("headerToMask"))
-            .loggingResponseMaskHeaders(listOf("headerToMask"))
-            .loggingRequestMaskBodyKeys(mapOf(JsonBodyType to listOf("jsonKeyToMask"), FormBodyType to listOf("formKeyToMask")))
-            .loggingResponseMaskBodyKeys(mapOf(JsonBodyType to listOf("jsonKeyToMask"), FormBodyType to listOf("formKeyToMask")))
             .build()
     }
 

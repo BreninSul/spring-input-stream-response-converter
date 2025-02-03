@@ -31,6 +31,15 @@ import io.github.breninsul.logging2.HttpConfigHeaders.LOG_RESPONSE_MASK_BODY_KEY
 import io.github.breninsul.logging2.JavaLoggingLevel
 import io.github.breninsul.servlet.logging2.RequestSemaphore
 import org.springframework.web.servlet.function.RouterFunctions.Builder
+import org.springframework.web.servlet.function.ServerRequest
+import java.util.function.Consumer
+
+
+fun Builder.processRequest(consumer: Consumer<ServerRequest>) = this
+    .before { rq ->
+        consumer.accept(rq)
+        return@before rq
+    }
 
 fun Builder.loggingEnabled(enable: Boolean?) = withAttribute(HttpConfigHeaders.LOG_LOGGING_ENABLED, enable)
 
