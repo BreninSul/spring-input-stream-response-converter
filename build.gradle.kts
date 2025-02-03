@@ -40,7 +40,7 @@ val javaVersion = JavaVersion.VERSION_17
 val springBootVersion = "3.4.2"
 
 group = "io.github.breninsul"
-version = "2.0.0"
+version = "2.0.2"
 
 java {
     sourceCompatibility = javaVersion
@@ -63,7 +63,7 @@ dependencies {
     compileOnly("org.springframework.boot:spring-boot-starter:$springBootVersion")
     compileOnly("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     api("io.github.breninsul:servlet-caching-request:1.1.3")
-    api("io.github.breninsul:http-logging-commons-2:2.0.6")
+    api("io.github.breninsul:http-logging-commons-2:2.0.9")
     kapt("org.springframework.boot:spring-boot-autoconfigure-processor")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.testcontainers:junit-jupiter")
