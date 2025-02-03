@@ -40,7 +40,7 @@ val javaVersion = JavaVersion.VERSION_17
 val springBootVersion = "3.4.2"
 
 group = "io.github.breninsul"
-version = "1.2.0"
+version = "2.0.0"
 
 java {
     sourceCompatibility = javaVersion
@@ -62,12 +62,16 @@ tasks.compileKotlin {
 dependencies {
     compileOnly("org.springframework.boot:spring-boot-starter:$springBootVersion")
     compileOnly("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-    api("io.github.breninsul:http-logging-commons:1.3.0")
-    testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-
+    api("io.github.breninsul:servlet-caching-request:1.1.3")
+    api("io.github.breninsul:http-logging-commons-2:2.0.6")
     kapt("org.springframework.boot:spring-boot-autoconfigure-processor")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
+    testImplementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
+    testImplementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
 }
 val javadocJar =
     tasks.named<Jar>("javadocJar") {
