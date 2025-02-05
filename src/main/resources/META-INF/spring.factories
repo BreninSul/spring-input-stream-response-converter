@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.github.breninsul.servlet.logging2.ServletLoggerConfiguration
+io.github.breninsul.springHttpMessageConverter.InputStreamResourceHttpMessageConverterConfiguration

@@ -40,7 +40,7 @@ val javaVersion = JavaVersion.VERSION_17
 val springBootVersion = "3.4.2"
 
 group = "io.github.breninsul"
-version = "2.0.3"
+version = "1.0.0"
 
 java {
     sourceCompatibility = javaVersion
@@ -62,8 +62,10 @@ tasks.compileKotlin {
 dependencies {
     compileOnly("org.springframework.boot:spring-boot-starter:$springBootVersion")
     compileOnly("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-    api("io.github.breninsul:servlet-caching-request:1.1.3")
-    api("io.github.breninsul:http-logging-commons-2:2.0.9")
+    compileOnly("io.minio:minio:8.5.12")
+    compileOnly("software.amazon.awssdk:s3:2.30.12")
+    implementation("io.github.breninsul:io-stream-commons:1.0.3")
+    api("org.apache.tika:tika-core:2.9.2")
     kapt("org.springframework.boot:spring-boot-autoconfigure-processor")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.testcontainers:junit-jupiter")

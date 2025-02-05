@@ -22,23 +22,15 @@
  * SOFTWARE.
  */
 
-package io.github.breninsul.servlet.logging2
+package io.github.breninsul.springHttpMessageConverter
 
-import io.github.breninsul.logging2.HttpLogSettings
-import io.github.breninsul.logging2.HttpMaskSettings
-import io.github.breninsul.logging2.JavaLoggingLevel
 
-open class ServletHttpRequestLogSettings(
-    loggingLevel: JavaLoggingLevel = JavaLoggingLevel.INFO,
-    idIncluded: Boolean = true,
-    uriIncluded: Boolean = true,
-    tookTimeIncluded: Boolean = true,
-    headersIncluded: Boolean = true,
-    bodyIncluded: Boolean = true,
-    maxBodySize: Int = Int.MAX_VALUE,
-    mask: HttpMaskSettings = HttpMaskSettings(),
-    var bodySizeToUseTempFileCaching: Long = 1024 * 1000 * 1, // Default 1 MB
-) : HttpLogSettings(loggingLevel,idIncluded, uriIncluded, tookTimeIncluded, headersIncluded, bodyIncluded, maxBodySize, mask){
-    @Deprecated(message = "Use constructor with loggingLevel")
-    constructor(idIncluded: Boolean,uriIncluded: Boolean,tookTimeIncluded: Boolean,headersIncluded: Boolean,bodyIncluded: Boolean,maxBodySize: Int,mask: HttpMaskSettings) : this(JavaLoggingLevel.INFO,idIncluded,uriIncluded,tookTimeIncluded,headersIncluded,bodyIncluded,maxBodySize,mask)
-}
+import org.springframework.boot.context.properties.ConfigurationProperties
+
+
+@ConfigurationProperties("input-stream-response-http-message-converter")
+open class InputStreamResourceHttpMessageConverterProperties(
+    var enabled: Boolean = true,
+    var chunkedResponseChunkSize: Int = DEFAULT_BUFFER_SIZE,
+    var requestAlwaysDetectMediaType: Boolean = false,
+)
