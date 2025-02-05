@@ -40,7 +40,7 @@ open class InputStreamResourceHttpMessageConverterConfiguration {
     @Bean(name = ["InputStreamResponseHttpMessageConverter"], value = ["InputStreamResponseHttpMessageConverter"])
     @ConditionalOnMissingBean(name = ["InputStreamResponseHttpMessageConverter"])
     fun inputStreamResponseHttpMessageConverter(properties: InputStreamResourceHttpMessageConverterProperties): InputStreamResponseHttpMessageConverter {
-        return InputStreamResponseHttpMessageConverter(properties.requestAlwaysDetectMediaType)
+        return InputStreamResponseHttpMessageConverter(properties.flushOutputStreamBuffer, properties.requestAlwaysDetectMediaType)
     }
 
 }

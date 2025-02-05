@@ -25,21 +25,27 @@
 package io.github.breninsul.springHttpMessageConverter
 
 
+import io.github.breninsul.springHttpMessageConverter.InputStreamResponseHttpMessageConverter.Companion.DEFAULT_FLUSH_OUTPUT_STREAM_VAL
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 /**
- * Configuration properties for managing the behavior of the
- * InputStreamResponseHttpMessageConverter.
+ * Configuration properties for the
+ * `InputStreamResponseHttpMessageConverter`. These properties control
+ * the behavior of the custom `HttpMessageConverter` used to process HTTP
+ * messages involving `InputStreamResponse`.
  *
- * @property enabled Defines whether the
- *    InputStreamResponseHttpMessageConverter is enabled. Default is true.
- * @property requestAlwaysDetectMediaType Specifies whether the converter
- *    should always try to detect the media type of the request. If set to
- *    false, the media type will only be resolved when not explicitly
- *    provided. Default is false.
+ * @property enabled Determines if the custom
+ *    `InputStreamResponseHttpMessageConverter` is enabled. Defaults to
+ *    `true`.
+ * @property flushOutputStreamBuffer Defines the buffer size in bytes for
+ *    flushing output streams. Defaults to
+ *    `DEFAULT_FLUSH_OUTPUT_STREAM_VAL` (8 * 1024).
+ * @property requestAlwaysDetectMediaType Indicates whether media type
+ *    detection is always enforced during a request. Defaults to `false`.
  */
 @ConfigurationProperties("input-stream-response-http-message-converter")
 open class InputStreamResourceHttpMessageConverterProperties(
     var enabled: Boolean = true,
+    var flushOutputStreamBuffer: Int = DEFAULT_FLUSH_OUTPUT_STREAM_VAL,
     var requestAlwaysDetectMediaType: Boolean = false,
 )

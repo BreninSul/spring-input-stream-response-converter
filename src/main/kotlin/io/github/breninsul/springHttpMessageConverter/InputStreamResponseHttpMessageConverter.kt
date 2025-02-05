@@ -35,6 +35,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
 
 open class InputStreamResponseHttpMessageConverter(
+    protected open val flushOutputStreamVal: Int = DEFAULT_FLUSH_OUTPUT_STREAM_VAL,
     protected open val requestAlwaysDetectMediaType: Boolean = false
 ) : HttpMessageConverter<InputStreamResponse> {
     override fun canRead(clazz: Class<*>, mediaType: MediaType?): Boolean {
@@ -61,9 +62,20 @@ open class InputStreamResponseHttpMessageConverter(
         }
         t.contentStream.use { content ->
             outputMessage.body.use { out ->
-                content.transferTo(out)
-                out.flush()
-                out.close()
+                var transferred: Long = 0
+                val buffer = ByteArray(flushOutputStreamVal)
+                var read: Int
+                while ((content.read(buffer, 0, flushOutputStreamVal).also { read = it }) >= 0) {
+                    out.write(buffer, 0, read)
+                    out.flush()
+                    if (transferred < Long.MAX_VALUE) {
+                        transferred = try {
+                            Math.addExact(transferred, read.toLong())
+                        } catch (ignore: ArithmeticException) {
+                            Long.MAX_VALUE
+                        }
+                    }
+                }
             }
         }
     }
@@ -80,4 +92,7 @@ open class InputStreamResponseHttpMessageConverter(
         )
     }
 
+    companion object {
+        const val DEFAULT_FLUSH_OUTPUT_STREAM_VAL: Int = DEFAULT_BUFFER_SIZE
+    }
 }
