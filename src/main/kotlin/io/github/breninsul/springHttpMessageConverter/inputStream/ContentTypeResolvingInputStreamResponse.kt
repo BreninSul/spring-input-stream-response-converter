@@ -1,3 +1,26 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2024 BreninSul
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package io.github.breninsul.springHttpMessageConverter.inputStream
 
 import io.github.breninsul.io.service.stream.inputStream.CacheReadenInputStream
@@ -9,8 +32,20 @@ import java.net.URL
 import java.util.logging.Level
 import java.util.logging.Logger
 
-
-open class DefaultInputStreamResponse(
+/**
+ * A class representing a response that provides an input stream for
+ * reading content and resolves the content type if not explicitly
+ * provided.
+ *
+ * The `ContentTypeResolvingInputStreamResponse` class leverages the Apache
+ * Tika library to detect the media type of the content stream when the
+ * `mediaType` parameter is null, enhancing the ability to handle streams
+ * with undetermined content types.
+ *
+ * @constructor Creates an instance of
+ *    `ContentTypeResolvingInputStreamResponse`.
+ */
+open class ContentTypeResolvingInputStreamResponse(
     contentStream: InputStream,
     override val name: String,
     size: Long? = null,
@@ -61,7 +96,7 @@ open class DefaultInputStreamResponse(
 fun File.toFileResource(
     mediaType: String? = null,
     resolveMediaType: Boolean = mediaType == null
-): InputStreamResponse = DefaultInputStreamResponse(
+): InputStreamResponse = ContentTypeResolvingInputStreamResponse(
     this.inputStream(),
     this.name,
     this.length(),
@@ -77,7 +112,7 @@ fun URI.toResourceInputInputStreamResponse(
 fun URL.toResourceInputInputStreamResponse(
     mediaType: String? = null,
     resolveMediaType: Boolean = mediaType == null
-): InputStreamResponse = DefaultInputStreamResponse(this.openStream(), this.file?.split('/')?.last() ?: "unknown", -1, mediaType, resolveMediaType)
+): InputStreamResponse = ContentTypeResolvingInputStreamResponse(this.openStream(), this.file?.split('/')?.last() ?: "unknown", -1, mediaType, resolveMediaType)
 
 fun URI.toLocalFileInputInputStreamResponse(
     mediaType: String? = null,

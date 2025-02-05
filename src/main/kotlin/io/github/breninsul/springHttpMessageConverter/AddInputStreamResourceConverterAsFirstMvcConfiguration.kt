@@ -21,26 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package io.github.breninsul.springHttpMessageConverter
 
 import org.springframework.boot.autoconfigure.AutoConfiguration
-import org.springframework.boot.autoconfigure.AutoConfigureBefore
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration
-import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.context.annotation.Bean
+import org.springframework.http.converter.HttpMessageConverter
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @ConditionalOnProperty(value = ["input-stream-response-http-message-converter"], havingValue = "true", matchIfMissing = true)
 @AutoConfiguration
-@EnableConfigurationProperties(InputStreamResourceHttpMessageConverterProperties::class)
-@AutoConfigureBefore(HttpMessageConvertersAutoConfiguration::class)
-open class InputStreamResourceHttpMessageConverterConfiguration {
-    @Bean(name = ["InputStreamResponseHttpMessageConverter"], value = ["InputStreamResponseHttpMessageConverter"])
-    @ConditionalOnMissingBean(name = ["InputStreamResponseHttpMessageConverter"])
-    fun inputStreamResponseHttpMessageConverter(properties: InputStreamResourceHttpMessageConverterProperties): InputStreamResponseHttpMessageConverter {
-        return InputStreamResponseHttpMessageConverter(properties.requestAlwaysDetectMediaType)
-    }
+open class AddInputStreamResourceConverterAsFirstMvcConfiguration(
+    protected open val inputStreamResponseHttpMessageConverter: InputStreamResponseHttpMessageConverter
+) : WebMvcConfigurer {
 
+    override fun extendMessageConverters(converters: MutableList<HttpMessageConverter<*>>) {
+        val convertersFiltered = converters.filter { it !is InputStreamResponseHttpMessageConverter }
+        converters.removeAll(convertersFiltered)
+        converters.add(0, inputStreamResponseHttpMessageConverter)// Add at the highest priority
+
+    }
 }

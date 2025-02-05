@@ -1,1 +1,2 @@
 io.github.breninsul.springHttpMessageConverter.InputStreamResourceHttpMessageConverterConfiguration
+io.github.breninsul.springHttpMessageConverter.AddInputStreamResourceConverterAsFirstMvcConfiguration

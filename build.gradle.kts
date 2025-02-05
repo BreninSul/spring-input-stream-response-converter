@@ -65,6 +65,7 @@ dependencies {
     compileOnly("io.minio:minio:8.5.12")
     compileOnly("software.amazon.awssdk:s3:2.30.12")
     implementation("io.github.breninsul:io-stream-commons:1.0.3")
+    api("org.springframework.boot:spring-boot-starter-aop:$springBootVersion")
     api("org.apache.tika:tika-core:2.9.2")
     kapt("org.springframework.boot:spring-boot-autoconfigure-processor")
     kapt("org.springframework.boot:spring-boot-configuration-processor")

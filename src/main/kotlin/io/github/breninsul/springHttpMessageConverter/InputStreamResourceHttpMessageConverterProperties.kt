@@ -27,10 +27,19 @@ package io.github.breninsul.springHttpMessageConverter
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-
+/**
+ * Configuration properties for managing the behavior of the
+ * InputStreamResponseHttpMessageConverter.
+ *
+ * @property enabled Defines whether the
+ *    InputStreamResponseHttpMessageConverter is enabled. Default is true.
+ * @property requestAlwaysDetectMediaType Specifies whether the converter
+ *    should always try to detect the media type of the request. If set to
+ *    false, the media type will only be resolved when not explicitly
+ *    provided. Default is false.
+ */
 @ConfigurationProperties("input-stream-response-http-message-converter")
 open class InputStreamResourceHttpMessageConverterProperties(
     var enabled: Boolean = true,
-    var chunkedResponseChunkSize: Int = DEFAULT_BUFFER_SIZE,
     var requestAlwaysDetectMediaType: Boolean = false,
 )
