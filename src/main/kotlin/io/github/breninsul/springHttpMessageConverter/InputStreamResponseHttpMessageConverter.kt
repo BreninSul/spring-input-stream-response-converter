@@ -58,8 +58,6 @@ open class InputStreamResponseHttpMessageConverter(
             .build()
         if (t.size > -1) {
             headers.set(CONTENT_LENGTH, t.size.toString())
-        } else {
-            headers.set("Transfer-Encoding", "chunked")
         }
         t.contentStream.use { content ->
             outputMessage.body.use { out ->

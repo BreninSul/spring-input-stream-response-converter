@@ -13,7 +13,7 @@ add the following dependency:
 ````kotlin
 dependencies {
 //Other dependencies
-    implementation("io.github.breninsul:spring-input-stream-response-converter:1.0.1")
+    implementation("io.github.breninsul:spring-input-stream-response-converter:1.0.2")
 //Other dependencies
 }
 ````
