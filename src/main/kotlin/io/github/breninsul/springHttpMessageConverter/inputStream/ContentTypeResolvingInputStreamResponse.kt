@@ -33,24 +33,38 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 /**
- * A class representing a response that provides an input stream for
- * reading content and resolves the content type if not explicitly
- * provided.
+ * A response implementation of the InputStreamResponse interface that
+ * resolves content type based on the input stream.
  *
- * The `ContentTypeResolvingInputStreamResponse` class leverages the Apache
- * Tika library to detect the media type of the content stream when the
- * `mediaType` parameter is null, enhancing the ability to handle streams
- * with undetermined content types.
+ * This class provides a mechanism for detecting the media type of a
+ * content stream if it is not explicitly provided. It also allows
+ * configuration of additional metadata such as content size, content
+ * disposition type, and filename return options.
  *
- * @constructor Creates an instance of
- *    `ContentTypeResolvingInputStreamResponse`.
+ * @param contentStream The input stream containing the content.
+ * @param name The name associated with the content.
+ * @param size Optional size of the content in bytes. Default is -1 if not
+ *    specified.
+ * @param mediaType Optional media type of the content. If null, it will be
+ *    resolved based on content using Apache Tika.
+ * @param resolveMediaType Indicates whether to resolve media type if not
+ *    provided. Default is true when mediaType is null.
+ * @param returnFilename Indicates whether the filename should be returned
+ *    in the response. Default is false.
+ * @param contentDispositionType Indicates the type of content disposition.
+ *    Default is ContentDispositionType.INLINE.
+ * @constructor Initializes the ContentTypeResolvingInputStreamResponse
+ *    with optional parameters to determine or explicitly define the media
+ *    type, size, and other response properties.
  */
 open class ContentTypeResolvingInputStreamResponse(
     contentStream: InputStream,
     override val name: String,
     size: Long? = null,
     mediaType: String? = null,
-    resolveMediaType: Boolean = mediaType == null
+    resolveMediaType: Boolean = mediaType == null,
+    override val contentDispositionType: ContentDispositionType = ContentDispositionType.INLINE,
+    override val returnFilename: Boolean = false,
 ) : InputStreamResponse {
     val contentStreamValue: InputStream;
     val contentTypeValue: String?

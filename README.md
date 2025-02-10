@@ -4,7 +4,6 @@ BreninSul Custom Input Stream Resource Http Messages Writer
 |---------------------------------------------------------------------------------|---------|------------------------------------------------|
 | `input-stream-response-http-message-converter.enabled`                          | Boolean | Enable autoconfig for this starter             |
 | `input-stream-response-http-message-converter.request-always-detect-media-type` | Boolean | Always automatically detect request media type |
-
 | `input-stream-response-http-message-converter.request-always-detect-media-type` | Boolean | Always automatically detect request media type |
 
 
@@ -15,7 +14,7 @@ add the following dependency:
 ````kotlin
 dependencies {
 //Other dependencies
-    implementation("io.github.breninsul:spring-input-stream-response-converter:1.0.3")
+    implementation("io.github.breninsul:spring-input-stream-response-converter:1.0.6")
 //Other dependencies
 }
 ````

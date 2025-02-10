@@ -53,10 +53,12 @@ open class InputStreamResponseHttpMessageConverter(
     override fun write(t: InputStreamResponse, contentType: MediaType?, outputMessage: HttpOutputMessage) {
         val headers = outputMessage.headers
         t.contentType?.let { headers.set(CONTENT_TYPE, it) }
-        headers.contentDisposition = ContentDisposition.attachment()
+        val contentDispositionBuilder = ContentDisposition.builder(t.contentDispositionType.value)
             .name(t.name)
-            .filename(t.name)
-            .build()
+        if (t.returnFilename) {
+            contentDispositionBuilder.filename(t.name)
+        }
+        headers.contentDisposition = contentDispositionBuilder.build()
         if (t.size > -1) {
             headers.set(CONTENT_LENGTH, t.size.toString())
         }

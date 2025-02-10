@@ -26,24 +26,16 @@ package io.github.breninsul.springHttpMessageConverter.inputStream
 import java.io.InputStream
 
 /**
- * Represents a response that provides an input stream for content
- * retrieval.
- *
- * This interface outlines the required properties for handling streamed
- * content, including the stream itself, metadata about the content, such
- * as its name and size, and optionally its content type if available.
- *
- * Properties:
- * - `name`: The name or identifier of the resource being retrieved.
- * - `contentStream`: The input stream of the resource, used for reading
- *   its content.
- * - `contentType`: The MIME type of the content, if known.
- * - `size`: The size of the content in bytes, or -1 if the size is
- *   unknown.
+ * Represents a response containing content as an input stream. This
+ * interface is typically used for handling streamed content in HTTP
+ * responses with metadata such as content type and size.
  */
 interface InputStreamResponse {
     val name: String
     val contentStream: InputStream
     val contentType: String?
     val size: Long
+    val contentDispositionType: ContentDispositionType get() = ContentDispositionType.ATTACHMENT
+    val returnFilename: Boolean
+        get() = true
 }

@@ -35,7 +35,7 @@ open class AddInputStreamResourceConverterAsFirstMvcConfiguration(
 ) : WebMvcConfigurer {
 
     override fun extendMessageConverters(converters: MutableList<HttpMessageConverter<*>>) {
-        val convertersFiltered = converters.filter { it !is InputStreamResponseHttpMessageConverter }
+        val convertersFiltered = converters.filterIsInstance<InputStreamResponseHttpMessageConverter>()
         converters.removeAll(convertersFiltered)
         converters.add(0, inputStreamResponseHttpMessageConverter)// Add at the highest priority
 
