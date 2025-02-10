@@ -26,26 +26,39 @@ package io.github.breninsul.springHttpMessageConverter
 
 
 import io.github.breninsul.springHttpMessageConverter.InputStreamResponseHttpMessageConverter.Companion.DEFAULT_FLUSH_OUTPUT_STREAM_VAL
+import io.github.breninsul.springHttpMessageConverter.inputStream.ContentDispositionType
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 /**
  * Configuration properties for the
- * `InputStreamResponseHttpMessageConverter`. These properties control
- * the behavior of the custom `HttpMessageConverter` used to process HTTP
- * messages involving `InputStreamResponse`.
+ * InputStreamResourceHttpMessageConverter.
  *
- * @property enabled Determines if the custom
- *    `InputStreamResponseHttpMessageConverter` is enabled. Defaults to
- *    `true`.
- * @property flushOutputStreamBuffer Defines the buffer size in bytes for
- *    flushing output streams. Defaults to
- *    `DEFAULT_FLUSH_OUTPUT_STREAM_VAL` (8 * 1024).
- * @property requestAlwaysDetectMediaType Indicates whether media type
- *    detection is always enforced during a request. Defaults to `false`.
+ * These properties allow customization of the behavior of the HTTP message
+ * converter responsible for handling responses with streams as their body.
+ *
+ * @property enabled Controls whether the
+ *    InputStreamResourceHttpMessageConverter is enabled or not. Defaults
+ *    to true.
+ * @property mvcConfigurationEnabled Determines whether the converter is
+ *    added to the Spring MVC configuration with the highest priority.
+ *    Defaults to true.
+ * @property flushOutputStreamBuffer Defines the buffer size used for
+ *    flushing the output stream. Defaults to
+ *    `DEFAULT_FLUSH_OUTPUT_STREAM_VAL`.
+ * @property requestAlwaysDetectMediaType Indicates whether to always
+ *    detect the media type from the HTTP request. Defaults to false.
+ * @property defaultContentDispositionType Specifies the default content
+ *    disposition type (e.g., inline, attachment). Defaults to
+ *    `ContentDispositionType.INLINE`.
+ * @property defaultAddFilename Determines whether to include the filename
+ *    in the content disposition by default. Defaults to true.
  */
 @ConfigurationProperties("input-stream-response-http-message-converter")
 open class InputStreamResourceHttpMessageConverterProperties(
     var enabled: Boolean = true,
+    var mvcConfigurationEnabled: Boolean = true,
     var flushOutputStreamBuffer: Int = DEFAULT_FLUSH_OUTPUT_STREAM_VAL,
     var requestAlwaysDetectMediaType: Boolean = false,
+    var defaultContentDispositionType: ContentDispositionType = ContentDispositionType.INLINE,
+    var defaultAddFilename: Boolean = true
 )

@@ -35,8 +35,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
 
 open class InputStreamResponseHttpMessageConverter(
-    protected open val flushOutputStreamVal: Int = DEFAULT_FLUSH_OUTPUT_STREAM_VAL,
-    protected open val requestAlwaysDetectMediaType: Boolean = false
+    protected open val properties: InputStreamResourceHttpMessageConverterProperties,
 ) : HttpMessageConverter<InputStreamResponse> {
     override fun canRead(clazz: Class<*>, mediaType: MediaType?): Boolean {
         return InputStreamResponse::class.java.isAssignableFrom(clazz)
@@ -53,9 +52,9 @@ open class InputStreamResponseHttpMessageConverter(
     override fun write(t: InputStreamResponse, contentType: MediaType?, outputMessage: HttpOutputMessage) {
         val headers = outputMessage.headers
         t.contentType?.let { headers.set(CONTENT_TYPE, it) }
-        val contentDispositionBuilder = ContentDisposition.builder(t.contentDispositionType.value)
+        val contentDispositionBuilder = ContentDisposition.builder(t.contentDispositionType?.value ?: properties.defaultContentDispositionType.value)
             .name(t.name)
-        if (t.returnFilename) {
+        if (t.addFilename ?: properties.defaultAddFilename) {
             contentDispositionBuilder.filename(t.name)
         }
         headers.contentDisposition = contentDispositionBuilder.build()
@@ -65,9 +64,10 @@ open class InputStreamResponseHttpMessageConverter(
         t.contentStream.use { content ->
             outputMessage.body.use { out ->
                 var transferred: Long = 0
-                val buffer = ByteArray(flushOutputStreamVal)
+                val flushOutputStreamBuffer = properties.flushOutputStreamBuffer
+                val buffer = ByteArray(flushOutputStreamBuffer)
                 var read: Int
-                while ((content.read(buffer, 0, flushOutputStreamVal).also { read = it }) >= 0) {
+                while ((content.read(buffer, 0, flushOutputStreamBuffer).also { read = it }) >= 0) {
                     out.write(buffer, 0, read)
                     out.flush()
                     if (transferred < Long.MAX_VALUE) {
@@ -90,7 +90,7 @@ open class InputStreamResponseHttpMessageConverter(
             inputMessage.headers.contentDisposition.filename ?: "unknown",
             size,
             mediaTypeHeader,
-            if (requestAlwaysDetectMediaType) true else mediaTypeHeader == null
+            if (properties.requestAlwaysDetectMediaType) true else mediaTypeHeader == null
         )
     }
 

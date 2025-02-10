@@ -30,10 +30,12 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse
 fun ResponseInputStream<GetObjectResponse>.toS3Resource(
     s3Key: String?,
     mediaType: String? = null,
-    resolveMediaType: Boolean = mediaType == null
+    resolveMediaType: Boolean = mediaType == null,
+    contentDispositionType: ContentDispositionType? = null,
+    returnFilename: Boolean? = null,
 ): InputStreamResponse = ContentTypeResolvingInputStreamResponse(
     this,
     s3Key?.split('/')?.last() ?: "unknown",
     this.response().contentLength() ?: -1,
-    mediaType, resolveMediaType
+    mediaType, resolveMediaType, contentDispositionType, returnFilename
 )

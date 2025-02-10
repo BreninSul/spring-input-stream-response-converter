@@ -49,8 +49,8 @@ import java.util.logging.Logger
  *    resolved based on content using Apache Tika.
  * @param resolveMediaType Indicates whether to resolve media type if not
  *    provided. Default is true when mediaType is null.
- * @param returnFilename Indicates whether the filename should be returned
- *    in the response. Default is false.
+ * @param addFilename Indicates whether the filename should be returned in
+ *    the response. Default is false.
  * @param contentDispositionType Indicates the type of content disposition.
  *    Default is ContentDispositionType.INLINE.
  * @constructor Initializes the ContentTypeResolvingInputStreamResponse
@@ -63,8 +63,8 @@ open class ContentTypeResolvingInputStreamResponse(
     size: Long? = null,
     mediaType: String? = null,
     resolveMediaType: Boolean = mediaType == null,
-    override val contentDispositionType: ContentDispositionType = ContentDispositionType.INLINE,
-    override val returnFilename: Boolean = false,
+    override val contentDispositionType: ContentDispositionType? = ContentDispositionType.INLINE,
+    override val addFilename: Boolean? = false,
 ) : InputStreamResponse {
     val contentStreamValue: InputStream;
     val contentTypeValue: String?
@@ -109,31 +109,42 @@ open class ContentTypeResolvingInputStreamResponse(
 
 fun File.toFileResource(
     mediaType: String? = null,
-    resolveMediaType: Boolean = mediaType == null
+    resolveMediaType: Boolean = mediaType == null,
+    contentDispositionType: ContentDispositionType? = null,
+    returnFilename: Boolean? = null,
 ): InputStreamResponse = ContentTypeResolvingInputStreamResponse(
     this.inputStream(),
     this.name,
     this.length(),
     mediaType,
-    resolveMediaType
+    resolveMediaType,
+    contentDispositionType, returnFilename
 )
 
 fun URI.toResourceInputInputStreamResponse(
     mediaType: String? = null,
-    resolveMediaType: Boolean = mediaType == null
-): InputStreamResponse = this.toURL().toResourceInputInputStreamResponse(mediaType, resolveMediaType)
+    resolveMediaType: Boolean = mediaType == null,
+    contentDispositionType: ContentDispositionType? = null,
+    returnFilename: Boolean? = null,
+): InputStreamResponse = this.toURL().toResourceInputInputStreamResponse(mediaType, resolveMediaType, contentDispositionType, returnFilename)
 
 fun URL.toResourceInputInputStreamResponse(
     mediaType: String? = null,
-    resolveMediaType: Boolean = mediaType == null
-): InputStreamResponse = ContentTypeResolvingInputStreamResponse(this.openStream(), this.file?.split('/')?.last() ?: "unknown", -1, mediaType, resolveMediaType)
+    resolveMediaType: Boolean = mediaType == null,
+    contentDispositionType: ContentDispositionType? = null,
+    returnFilename: Boolean? = null,
+): InputStreamResponse = ContentTypeResolvingInputStreamResponse(this.openStream(), this.file?.split('/')?.last() ?: "unknown", -1, mediaType, resolveMediaType, contentDispositionType, returnFilename)
 
 fun URI.toLocalFileInputInputStreamResponse(
     mediaType: String? = null,
-    resolveMediaType: Boolean = mediaType == null
-): InputStreamResponse = this.toURL().toLocalFileInputInputStreamResponse(mediaType, resolveMediaType)
+    resolveMediaType: Boolean = mediaType == null,
+    contentDispositionType: ContentDispositionType? = null,
+    returnFilename: Boolean? = null,
+): InputStreamResponse = this.toURL().toLocalFileInputInputStreamResponse(mediaType, resolveMediaType, contentDispositionType, returnFilename)
 
 fun URL.toLocalFileInputInputStreamResponse(
     mediaType: String? = null,
-    resolveMediaType: Boolean = mediaType == null
-): InputStreamResponse = File(this.file).toFileResource(mediaType, resolveMediaType)
+    resolveMediaType: Boolean = mediaType == null,
+    contentDispositionType: ContentDispositionType? = null,
+    returnFilename: Boolean? = null,
+): InputStreamResponse = File(this.file).toFileResource(mediaType, resolveMediaType, contentDispositionType, returnFilename)

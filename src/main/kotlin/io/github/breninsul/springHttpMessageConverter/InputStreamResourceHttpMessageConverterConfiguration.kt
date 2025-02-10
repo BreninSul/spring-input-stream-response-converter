@@ -32,7 +32,7 @@ import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConf
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
-@ConditionalOnProperty(value = ["input-stream-response-http-message-converter"], havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = ["enabled"], prefix = "input-stream-response-http-message-converter", havingValue = "true", matchIfMissing = true)
 @AutoConfiguration
 @EnableConfigurationProperties(InputStreamResourceHttpMessageConverterProperties::class)
 @AutoConfigureBefore(HttpMessageConvertersAutoConfiguration::class)

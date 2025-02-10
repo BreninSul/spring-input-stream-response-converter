@@ -27,9 +27,11 @@ import io.minio.GetObjectResponse
 
 fun GetObjectResponse.toMinIOResource(
     mediaType: String? = null,
-    resolveMediaType: Boolean = mediaType == null
+    resolveMediaType: Boolean = mediaType == null,
+    contentDispositionType: ContentDispositionType? = null,
+    returnFilename: Boolean? = null,
 ): InputStreamResponse = ContentTypeResolvingInputStreamResponse(
     this, this.`object`()?.split('/')?.last() ?: "unknown", this.headers()["Content-Length"]?.toLong() ?: -1,
-    mediaType, resolveMediaType
+    mediaType, resolveMediaType, contentDispositionType, returnFilename
 )
 

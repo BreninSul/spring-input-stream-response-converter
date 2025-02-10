@@ -35,7 +35,6 @@ interface InputStreamResponse {
     val contentStream: InputStream
     val contentType: String?
     val size: Long
-    val contentDispositionType: ContentDispositionType get() = ContentDispositionType.ATTACHMENT
-    val returnFilename: Boolean
-        get() = true
+    val contentDispositionType: ContentDispositionType?
+    val addFilename: Boolean?
 }

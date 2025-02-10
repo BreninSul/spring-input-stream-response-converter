@@ -1,20 +1,20 @@
 BreninSul Custom Input Stream Resource Http Messages Writer
 
-| Parameter                                                                       | Type    | Description                                    |
-|---------------------------------------------------------------------------------|---------|------------------------------------------------|
-| `input-stream-response-http-message-converter.enabled`                          | Boolean | Enable autoconfig for this starter             |
-| `input-stream-response-http-message-converter.request-always-detect-media-type` | Boolean | Always automatically detect request media type |
-| `input-stream-response-http-message-converter.request-always-detect-media-type` | Boolean | Always automatically detect request media type |
-
-
-
+| Parameter                                                                       | Type                        | Description                                                                                                         |
+|---------------------------------------------------------------------------------|-----------------------------|---------------------------------------------------------------------------------------------------------------------|
+| `input-stream-response-http-message-converter.enabled`                          | Boolean                     | Enable autoconfig for this starter                                                                                  |
+| `input-stream-response-http-message-converter.mvc-configuration-enabled`        | Boolean                     | Enable WebMvcConfigurer that registers InputStreamResponseHttpMessageConverter if it's not registered automatically |
+| `input-stream-response-http-message-converter.request-always-detect-media-type` | Boolean                     | Always automatically detect request media type                                                                      |
+| `input-stream-response-http-message-converter.default-add-filename`             | Boolean                     | Add filename to content disposition header                                                                          |
+| `input-stream-response-http-message-converter.default-content-disposition-type` | ATTACHMENT/FORM_DATA/INLINE | Http content disposition header type                                                                                |
+| `input-stream-response-http-message-converter.flush-output-stream-buffer`       | Int                         | Output stream flush buffer                                                                                          |
 
 add the following dependency:
 
 ````kotlin
 dependencies {
 //Other dependencies
-    implementation("io.github.breninsul:spring-input-stream-response-converter:1.0.6")
+    implementation("io.github.breninsul:spring-input-stream-response-converter:1.1.0")
 //Other dependencies
 }
 ````
