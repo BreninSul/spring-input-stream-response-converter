@@ -28,7 +28,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
-@ConditionalOnProperty(name = ["mvc-configuration-enabled"], prefix = "input-stream-response-http-message-converter", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = ["mvc-configuration-enabled"], prefix = "input-stream-response-http-message-converter", havingValue = "true", matchIfMissing = false)
 @AutoConfiguration
 open class AddInputStreamResourceConverterAsFirstMvcConfiguration(
     protected open val inputStreamResponseHttpMessageConverter: InputStreamResponseHttpMessageConverter

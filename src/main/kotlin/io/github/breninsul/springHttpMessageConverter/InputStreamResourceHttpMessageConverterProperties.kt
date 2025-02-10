@@ -56,7 +56,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties("input-stream-response-http-message-converter")
 open class InputStreamResourceHttpMessageConverterProperties(
     var enabled: Boolean = true,
-    var mvcConfigurationEnabled: Boolean = true,
+    var mvcConfigurationEnabled: Boolean = false,
     var flushOutputStreamBuffer: Int = DEFAULT_FLUSH_OUTPUT_STREAM_VAL,
     var requestAlwaysDetectMediaType: Boolean = false,
     var defaultContentDispositionType: ContentDispositionType = ContentDispositionType.INLINE,
