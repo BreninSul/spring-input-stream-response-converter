@@ -27,7 +27,7 @@ import java.io.InputStream
 
 
 fun InputStream.toInputStreamResponse(
-    s3Key: String?,
+    name: String?,
     mediaType: String? = null,
     resolveMediaType: Boolean = mediaType == null,
     contentDispositionType: ContentDispositionType? = null,
@@ -35,7 +35,7 @@ fun InputStream.toInputStreamResponse(
     fileSize: Long? = null,
 ): InputStreamResponse = ContentTypeResolvingInputStreamResponse(
     this,
-    s3Key?.split('/')?.last() ?: "unknown",
+    name ?: "unknown",
     fileSize ?: -1,
     mediaType, resolveMediaType, contentDispositionType, returnFilename
 )
