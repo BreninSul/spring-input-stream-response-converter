@@ -19,14 +19,29 @@ import java.net.http.HttpResponse
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = [TestApplication::class])
 @ExtendWith(SpringExtension::class)
 @TestConfiguration
-class RouteTestDefault {
+class TestDefault {
 
     @Test
-    fun testChunkedResource() {
-        Thread.sleep(100000)
+    fun testChunkedResourceRoute() {
+        Thread.sleep(10000)
         val originalResource = IOUtils.resourceToURL("1.webp", javaClass.classLoader).readBytes()
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://127.0.0.1:5367/test-chunked-resource-route"))
+            .GET()
+            .build();
+        val httpClient = HttpClient
+            .newBuilder()
+            .build();
+        val send = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
+        assert(send.body().contentEquals(originalResource))
+    }
+
+    @Test
+    fun testChunkedResourceController() {
+        Thread.sleep(10000)
+        val originalResource = IOUtils.resourceToURL("1.webp", javaClass.classLoader).readBytes()
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("http://127.0.0.1:5367/test-chunked-resource-controller"))
             .GET()
             .build();
         val httpClient = HttpClient
