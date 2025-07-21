@@ -14,7 +14,7 @@ add the following dependency:
 ````kotlin
 dependencies {
 //Other dependencies
-    implementation("io.github.breninsul:spring-input-stream-response-converter:1.1.2")
+    implementation("io.github.breninsul:spring-input-stream-response-converter:1.1.3")
 //Other dependencies
 }
 ````

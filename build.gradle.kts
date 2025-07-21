@@ -24,7 +24,7 @@
 
 plugins {
     val kotlinVersion = "2.0.0"
-    val springBootVersion = "3.4.2"
+    val springBootVersion = "3.5.3"
     id("java-library")
     id("net.thebugmc.gradle.sonatype-central-portal-publisher") version "1.2.3"
     id("org.springframework.boot") version springBootVersion
@@ -37,10 +37,10 @@ plugins {
 
 val kotlinVersion = "2.0.0"
 val javaVersion = JavaVersion.VERSION_17
-val springBootVersion = "3.4.2"
+val springBootVersion = "3.5.3"
 
 group = "io.github.breninsul"
-version = "1.1.2"
+version = "1.1.3"
 
 java {
     sourceCompatibility = javaVersion
@@ -62,11 +62,11 @@ tasks.compileKotlin {
 dependencies {
     compileOnly("org.springframework.boot:spring-boot-starter:$springBootVersion")
     compileOnly("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-    compileOnly("io.minio:minio:8.5.12")
-    compileOnly("software.amazon.awssdk:s3:2.30.12")
-    implementation("io.github.breninsul:io-stream-commons:1.0.3")
+    compileOnly("io.minio:minio:8.5.17")
+    compileOnly("software.amazon.awssdk:s3:2.32.4")
+    api("io.github.breninsul:io-stream-commons:1.0.4")
     api("org.springframework.boot:spring-boot-starter-aop:$springBootVersion")
-    api("org.apache.tika:tika-core:2.9.2")
+    api("org.apache.tika:tika-core:3.2.1")
     kapt("org.springframework.boot:spring-boot-autoconfigure-processor")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.testcontainers:junit-jupiter")
