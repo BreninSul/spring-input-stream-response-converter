@@ -51,4 +51,18 @@ class TestDefault {
         assert(send.body().contentEquals(originalResource))
     }
 
+    @Test
+    fun testChunkedResourceController2() {
+        Thread.sleep(10000)
+        val originalResource = IOUtils.resourceToURL("1.webp", javaClass.classLoader).readBytes()
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("http://127.0.0.1:5367/test-chunked-resource-controller-2"))
+            .GET()
+            .build();
+        val httpClient = HttpClient
+            .newBuilder()
+            .build();
+        val send = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
+        assert(send.body().contentEquals(originalResource))
+    }
 }
