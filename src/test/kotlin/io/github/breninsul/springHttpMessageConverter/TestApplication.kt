@@ -1,13 +1,11 @@
 package io.github.breninsul.springHttpMessageConverter
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.websocket.servlet.WebSocketServletAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
 
 @SpringBootApplication(
-    exclude = [WebSocketServletAutoConfiguration::class],
     scanBasePackageClasses = [InputStreamResourceHttpMessageConverterConfiguration::class, TestRoute::class]
 )
 class TestApplication {

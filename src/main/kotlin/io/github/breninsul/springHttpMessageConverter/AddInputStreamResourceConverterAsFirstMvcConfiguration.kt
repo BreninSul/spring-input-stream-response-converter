@@ -25,7 +25,7 @@ package io.github.breninsul.springHttpMessageConverter
 
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.http.converter.HttpMessageConverter
+import org.springframework.http.converter.HttpMessageConverters
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @ConditionalOnProperty(name = ["mvc-configuration-enabled"], prefix = "input-stream-response-http-message-converter", havingValue = "true", matchIfMissing = false)
@@ -34,10 +34,8 @@ open class AddInputStreamResourceConverterAsFirstMvcConfiguration(
     protected open val inputStreamResponseHttpMessageConverter: InputStreamResponseHttpMessageConverter
 ) : WebMvcConfigurer {
 
-    override fun extendMessageConverters(converters: MutableList<HttpMessageConverter<*>>) {
-        val convertersFiltered = converters.filterIsInstance<InputStreamResponseHttpMessageConverter>()
-        converters.removeAll(convertersFiltered)
-        converters.add(0, inputStreamResponseHttpMessageConverter)// Add at the highest priority
-
+    override fun configureMessageConverters(builder: HttpMessageConverters.ServerBuilder) {
+        // Registers the converter ahead of the default converters (highest priority)
+        builder.addCustomConverter(inputStreamResponseHttpMessageConverter)
     }
 }
